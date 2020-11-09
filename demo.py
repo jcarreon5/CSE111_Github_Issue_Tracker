@@ -333,7 +333,7 @@ def createBranch(_conn, b_issueID, b_desc = ""):
         else: 
             row = rows[0]
         b_branchID = row[0]
-        print("Largest branchID = " + str(row[0]))
+        print("Largest branchID = " + str(row[0])) 
         b_branchID = str(int(b_branchID) + 1)
         print("Inserting branch #" + b_branchID + " into table...")
         sql = """
@@ -341,6 +341,41 @@ def createBranch(_conn, b_issueID, b_desc = ""):
                 VALUES(?, ?, ?)
         """
         args = [b_issueID, b_branchID, b_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+def createReleases(_conn, r_projectID, r_desc = ""):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Create Realese")
+    try:
+        sql = """
+                SELECT MAX(r_releaseID)
+                FROM releases;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        
+        print("-------------------------------")
+        print("Fetching largest releaseID...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        r_releaseID = row[0]
+        print("Largest releaseID = " + str(row[0]))
+        r_releaseID= str(int(r_releaseID) + 1)
+        print("Inserting releases #" + r_releaseID + " into table...")
+        sql = """
+                INSERT INTO releases(r_projectID, r_releaseID, r_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [r_projectID, r_releaseID, r_desc]
         cur = _conn.cursor()
         cur.execute(sql, args)
     except Error as e:
@@ -568,6 +603,47 @@ def getEmployeeID(_conn, username):
     except Error as e:
         _conn.rollback()
         print(e)
+        
+def mergemerge(_conn, mr_mergeID):
+    #teake the id from merge request table
+    # using that it will go to branches using branch id
+    # go to issus using issue id 
+    # go to projects using porjects id 
+    #updated.p_lastupdate
+    #delete entry from merge request table
+    print('+++++++++++++++++++++++++++++++++')
+    print('MergeMerge')
+    try:
+        sql = """DELETE FROM mergerequest WHERE mergerequest.mr_mergeID  = ?"""
+
+        sql2 = """SELECT projects.p_projectID FROM projects 
+            JOIN issues ON issues.i_projectID = projects.p_projectID
+            JOIN branches ON branches.b_issueID = issues.i_issueID
+            JOIN mergerequests ON mergerequests.mr_branchID= branches.b_branchID
+            WHERE mergerequests.mr_mergeID = ?;"""
+
+        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
+        
+        cur = _conn.cursor()
+        cur.execute(sql,mr_mergeID)
+
+        cur.execute(sql2,mr_mergeID)
+
+        p_ID = cur.fetchall()
+
+        cur.execute(sql3,p_ID)
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+
+
+
+
+
 
 def Q2(_conn):
     print("++++++++++++++++++++++++++++++++++")
