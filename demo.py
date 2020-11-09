@@ -512,6 +512,63 @@ def setProjectDescription(_conn, projectID, description):
         print(e)
     print("++++++++++++++++++++++++++++++++++")
 
+def setIssueDescription(_conn, issueID, description):
+    print("Setting issue description")
+    try:
+        sql = """
+            UPDATE issues
+            SET i_desc = ?
+            WHERE i_issueID = ?;
+        """
+        args = [description, issueID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, issueID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def setMergeRequestDescription(_conn, mergeID, description):
+    print("Setting merge request description")
+    try:
+        sql = """
+            UPDATE mergerequests
+            SET mr_desc = ?
+            WHERE mr_mergeID = ?;
+        """
+        args = [description, mergeID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, mergeID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def setBranchDescription(_conn, branchID, description):
+    print("Setting issue description")
+    try:
+        sql = """
+            UPDATE branch
+            SET b_desc = ?
+            WHERE b_branchID = ?;
+        """
+        args = [description, branchID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, branchID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
 def setProjectName(_conn, projectID, projectName):
     print("Setting project name")
     try:
@@ -664,6 +721,72 @@ def mergemerge(_conn, mr_mergeID):
     
     print("++++++++++++++++++++++++++++++++++")
 
+def mergeIssues(_conn, i_issueID):
+    #teake the id from merge request table
+    # using that it will go to branches using branch id
+    # go to issus using issue id 
+    # go to projects using porjects id 
+    #updated.p_lastupdate
+    #delete entry from merge request table
+    print('+++++++++++++++++++++++++++++++++')
+    print('MergeIssues')
+    try:
+        sql = """DELETE FROM issues WHERE issues.i_issueID  = ?"""
+
+        sql2 = """SELECT projects.p_projectID FROM projects 
+            JOIN issues ON issues.i_projectID = projects.p_projectID
+            WHERE issues.i_issueID = ?;"""
+
+        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
+        
+        cur = _conn.cursor()
+        cur.execute(sql,i_issueID)
+
+        cur.execute(sql2,i_issueID)
+
+        s_ID = cur.fetchall()
+
+        cur.execute(sql3,s_ID)
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+def mergeBranches(_conn, b_branchID):
+    #teake the id from merge request table
+    # using that it will go to branches using branch id
+    # go to issus using issue id 
+    # go to projects using porjects id 
+    #updated.p_lastupdate
+    #delete entry from merge request table
+    print('+++++++++++++++++++++++++++++++++')
+    print('MergeBranches')
+    try:
+        sql = """DELETE FROM branches WHERE branches.b_branchID  = ?"""
+
+        sql2 = """SELECT projects.p_projectID FROM projects  
+            JOIN issues ON issues.i_projectID = projects.p_projectID 
+            JOIN branches ON branches.b_issueID = issues.i_issueID
+            WHERE branches.b_branchID = ?;"""
+
+        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
+        
+        cur = _conn.cursor()
+        cur.execute(sql,b_branchID)
+
+        cur.execute(sql2,b_branchID)
+
+        b_ID = cur.fetchall()
+
+        cur.execute(sql3,b_ID)
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
 
 
 
