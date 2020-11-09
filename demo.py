@@ -351,6 +351,41 @@ def createBranch(_conn, b_issueID, b_desc = ""):
     print("success")
     print("++++++++++++++++++++++++++++++++++")
 
+def createReleases(_conn, r_projectID, r_desc = ""):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Create Realese")
+    try:
+        sql = """
+                SELECT MAX(r_releaseID)
+                FROM releases;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        
+        print("-------------------------------")
+        print("Fetching largest releaseID...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        r_releaseID = row[0]
+        print("Largest releaseID = " + str(row[0]))
+        r_releaseID= str(int(r_releaseID) + 1)
+        print("Inserting releases #" + r_releaseID + " into table...")
+        sql = """
+                INSERT INTO releases(r_projectID, r_releaseID, r_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [r_projectID, r_releaseID, r_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
 def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
     print("++++++++++++++++++++++++++++++++++")
     print("Create Merge Request")
