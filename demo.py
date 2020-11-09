@@ -424,6 +424,46 @@ def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
 
 
 
+def mergemerge(_conn, mr_mergeID):
+    #teake the id from merge request table
+    # using that it will go to branches using branch id
+    # go to issus using issue id 
+    # go to projects using porjects id 
+    #updated.p_lastupdate
+    #delete entry from merge request table
+    print('+++++++++++++++++++++++++++++++++')
+    print('MergeMerge')
+    try:
+        sql = """DELETE FROM mergerequest WHERE mergerequest.mr_mergeID  = ?"""
+
+        sql2 = """SELECT projects.p_projectID FROM projects 
+            JOIN issues ON issues.i_projectID = projects.p_projectID
+            JOIN branches ON branches.b_issueID = issues.i_issueID
+            JOIN mergerequests ON mergerequests.mr_branchID= branches.b_branchID
+            WHERE mergerequests.mr_mergeID = ?;"""
+
+        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
+        
+        cur = _conn.cursor()
+        cur.execute(sql,mr_mergeID)
+
+        cur.execute(sql2,mr_mergeID)
+
+        p_ID = cur.fetchall()
+
+        cur.execute(sql3,p_ID)
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+
+
+
+
+
 
 def Q2(_conn):
     print("++++++++++++++++++++++++++++++++++")
