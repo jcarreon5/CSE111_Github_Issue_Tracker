@@ -67,7 +67,7 @@ def createTable(_conn):
             );""",
             """CREATE TABLE projects (
                 p_projectID DECIMAL(10, 0) NOT NULL, 
-                p_projectname VARCHAR(20) NOT NULL, 
+                p_projectName VARCHAR(20) NOT NULL, 
                 p_desc VARCHAR(512), 
                 p_managerID DECIMAL(10, 0), 
                 p_createdDate DATETIME NOT NULL,
@@ -162,11 +162,11 @@ def populateTable(_conn):
 
         #customers
         # c_customerID , c_industryID , c_name , c_phone , c_address, c_createdDate
-        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street', '04-15-2020' ])
-        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street', '05-15-2020' ])
-        customers.append([2,2, 'MY', '159-214-1433','ashjg Street', '06-15-2020' ])
-        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street', '07-15-2020' ])
-        customers.append([4,4, 'John', '098-234-7993','ikmn Street' , '10-15-2020'])
+        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street', '2020-04-15 03:55:18' ])
+        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street', '2020-05-15 03:55:18' ])
+        customers.append([2,2, 'MY', '159-214-1433','ashjg Street', '2020-06-15 03:55:18' ])
+        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street', '2020-07-15 03:55:18' ])
+        customers.append([4,4, 'John', '098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
 
         #developerprojects
         #dp_employeeID , dp_projectID
@@ -175,11 +175,11 @@ def populateTable(_conn):
         
         #developers
         #e_employeeID , e_username , e_password , e_email , e_createdDate
-        developers.append([0,'THjD', 'AASDFGH', 'sdfghj@gmail.com', '01-01-2020' ])
-        developers.append([1,'ljgd', 'mjhredc', 'sawerty@gmail.com', '01-02-2020' ])
-        developers.append([2,'ertytgfv', 'asdfgcxa', 'plmnbv@gmail.com', '01-03-2020' ])
-        developers.append([3,'Tploiuyd', 'poiuytrsd', 'rtyuij@gmail.com', '01-04-2020' ])
-        developers.append([4,'asdfg', 'oiuytrsdfg', 'mjytrsx@gmail.com', '01-05-2020' ])
+        developers.append([0,'Timmy', 'AASDFGH', 'sdfghj@gmail.com', '2020-01-11 03:55:18' ])
+        developers.append([1,'Jimmy', 'mjhredc', 'sawerty@gmail.com', '2020-02-11 03:55:18' ])
+        developers.append([2,'Kimmy', 'asdfgcxa', 'plmnbv@gmail.com', '2020-03-11 03:55:18' ])
+        developers.append([3,'Paul', 'poiuytrsd', 'rtyuij@gmail.com', '2020-04-11 03:55:18' ])
+        developers.append([4,'Ronny', 'oiuytrsdfg', 'mjytrsx@gmail.com', '2020-05-11 03:55:18' ])
 
         #industry
         #ind_industryID , ind_industryName
@@ -215,13 +215,13 @@ def populateTable(_conn):
         projectmanagers.append([4,4])
 
         #projects
-        #p_projectID , p_projectname , p_desc , p_managerID , p_createdDate , p_lastUpdate 
+        #p_projectID , p_projectName , p_desc , p_managerID , p_createdDate , p_lastUpdate 
 
-        projects.append([0,'a', 'sdfghj', 0, '01-02-2020', '01-03-2020'])
-        projects.append([1,'b', 'ljhgfdxdfv', 1, '02-02-2020', '02-03-2020'])
-        projects.append([2,'c', 'wertyhgfc', 2, '03-02-2020', '03-03-2020'])
-        projects.append([3,'d', 'lkjhgfd', 3, '04-02-2020', '04-03-2020'])
-        projects.append([4,'e', 'ougfd', 4, '05-02-2020', '05-03-2020'])
+        projects.append([0,'a', 'sdfghj', 0, '2020-02-01 03:55:18', '2020-02-01 03:55:18'])
+        projects.append([1,'b', 'ljhgfdxdfv', 1, '2020-02-02 03:55:18', '2020-02-02 03:55:18'])
+        projects.append([2,'c', 'wertyhgfc', 2, '2020-02-03 03:55:18', '2020-02-03 03:55:18'])
+        projects.append([3,'d', 'lkjhgfd', 3, '2020-02-04 03:55:18', '2020-02-04 03:55:18'])
+        projects.append([4,'e', 'ougfd', 4, '2020-02-05 03:55:18', '2020-02-05 03:55:18'])
 
         #releases
         #r_projectID , r_releaseID , r_descS
@@ -287,7 +287,6 @@ def createIssue(_conn, i_projectID, i_desc = ""):
                 SELECT MAX(i_issueID)
                 FROM issues;
             """
-        args = [i_projectID]
         cur = _conn.cursor()
         cur.execute(sql)
         
@@ -323,7 +322,6 @@ def createBranch(_conn, b_issueID, b_desc = ""):
                 SELECT MAX(b_branchID)
                 FROM branches;
             """
-        args = [b_issueID]
         cur = _conn.cursor()
         cur.execute(sql)
         
@@ -359,7 +357,6 @@ def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
                 SELECT MAX(mr_mergeID)
                 FROM mergerequests;
             """
-        args = [mr_branchID]
         cur = _conn.cursor()
         cur.execute(sql)
         
@@ -387,8 +384,190 @@ def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
     print("success")
     print("++++++++++++++++++++++++++++++++++")
 
+def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Create Project")
+    try:
+        sql = """
+                SELECT MAX(p_projectID)
+                FROM projects;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        print("-------------------------------")
+        print("Fetching largest projectID...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        p_projectID = row[0]
+        print("Largest mergeID = " + str(row[0]))
+        p_projectID = str(int(p_projectID) + 1)
+        
+        sql = """
+                SELECT datetime('now');
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        print("-------------------------------")
+        print("Getting current timestamp...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        p_createdDate = p_lastUpdate = row[0]
+        print("Current time = " + str(row[0]))
+        
+        
+        print("Inserting project #" + p_projectID + " into table...")
+        sql = """
+                INSERT INTO projects(p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate)
+                VALUES(?, ?, ?, ?, ?)
+        """
+        args = [p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        if(len(p_managerID) != 0):
+            setProjectManager(_conn, p_projectID, p_managerID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    
+    print("++++++++++++++++++++++++++++++++++")
 
+def setProjectManager(_conn, projectID, managerID):
+    print("Setting project manager")
+    try:
+        sql = """
+            UPDATE projects
+            SET p_managerID = ?
+            WHERE p_projectID = ?;
+        """
+        args = [managerID, projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, projectID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
 
+def setProjectDescription(_conn, projectID, description):
+    print("Setting project description")
+    try:
+        sql = """
+            UPDATE projects
+            SET p_desc = ?
+            WHERE p_projectID = ?;
+        """
+        args = [description, projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, projectID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def setProjectName(_conn, projectID, projectName):
+    print("Setting project name")
+    try:
+        sql = """
+            UPDATE projects
+            SET p_projectName = ?
+            WHERE p_projectID = ?;
+        """
+        args = [projectName, projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, projectID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def updateProject(_conn, projectID):
+    print("Setting project manager")
+    try:
+        sql = """
+                SELECT datetime('now');
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        print("-------------------------------")
+        print("Getting current timestamp...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        p_lastUpdate = row[0]
+        print("Current time = " + str(row[0]))
+        
+        sql = """
+                UPDATE projects
+                SET p_lastUpdate = ?
+                WHERE p_projectID = ?;
+        """
+        
+        args = [p_lastUpdate, projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def getProjectID(_conn, projectName):
+    try:
+        sql = """
+                    SELECT p_projectID
+                    FROM projects
+                    WHERE p_projectName = ?;
+            """
+        args = [projectName]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [-1]
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getEmployeeID(_conn, username):
+    try:
+        sql = """
+                    SELECT e_employeeID
+                    FROM developers
+                    WHERE e_username LIKE ?;
+            """
+        args = [username]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [-1]
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
 
 def Q2(_conn):
     print("++++++++++++++++++++++++++++++++++")
@@ -552,8 +731,8 @@ def main():
         print()
         createTable(conn)
         print()
-        #populateTable(conn)
-        #print()
+        populateTable(conn)
+        print()
         
         createIssue(conn, 1, "yo issue fat")
         print()
@@ -561,6 +740,15 @@ def main():
         print()
         createMergeRequest(conn, 1, "yo merge request fat")
         print()
+        createProject(conn, "devlogs")
+        print()
+        projID = getProjectID(conn, "devlogs")
+        setProjectDescription(conn, projID, "create logs for developers!")
+        setProjectName(conn, projID, "Developer Logging")
+        empID = getEmployeeID(conn, "Ronny")
+        setProjectManager(conn, projID, empID)
+        print()
+        
         '''
         Q1(conn)
         print()
