@@ -240,7 +240,7 @@ def populateTable(_conn):
         sql = "INSERT INTO  customerprojects VALUES(?, ?)"
         _conn.executemany(sql, customerprojects)
 
-        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?)"
+        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?, ?)"
         _conn.executemany(sql, customers)
 
         sql = "INSERT INTO developerprojects VALUES(?, ?)"
