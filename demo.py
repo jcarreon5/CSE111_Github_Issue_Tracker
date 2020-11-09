@@ -161,12 +161,12 @@ def populateTable(_conn):
             customerprojects.append([i,i])
 
         #customers
-        # c_customerID , c_industryID , c_name , c_phone , c_address
-        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street' ])
-        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street' ])
-        customers.append([2,2, 'MY', '159-214-1433','ashjg Street' ])
-        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street' ])
-        customers.append([4,4, 'John', '098-234-7993','ikmn Street' ])
+        # c_customerID , c_industryID , c_name , c_phone , c_address, c_createdDate
+        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street', '04-15-2020' ])
+        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street', '05-15-2020' ])
+        customers.append([2,2, 'MY', '159-214-1433','ashjg Street', '06-15-2020' ])
+        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street', '07-15-2020' ])
+        customers.append([4,4, 'John', '098-234-7993','ikmn Street' , '10-15-2020'])
 
         #developerprojects
         #dp_employeeID , dp_projectID
