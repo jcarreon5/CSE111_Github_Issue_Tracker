@@ -512,6 +512,63 @@ def setProjectDescription(_conn, projectID, description):
         print(e)
     print("++++++++++++++++++++++++++++++++++")
 
+def setIssueDescription(_conn, issueID, description):
+    print("Setting issue description")
+    try:
+        sql = """
+            UPDATE issues
+            SET i_desc = ?
+            WHERE i_issueID = ?;
+        """
+        args = [description, issueID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, issueID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def setMergeRequestDescription(_conn, mergeID, description):
+    print("Setting merge request description")
+    try:
+        sql = """
+            UPDATE mergerequests
+            SET mr_desc = ?
+            WHERE mr_mergeID = ?;
+        """
+        args = [description, mergeID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, mergeID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
+def setBranchDescription(_conn, branchID, description):
+    print("Setting issue description")
+    try:
+        sql = """
+            UPDATE branch
+            SET b_desc = ?
+            WHERE b_branchID = ?;
+        """
+        args = [description, branchID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        
+        updateProject(_conn, branchID)
+        print("success")
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("++++++++++++++++++++++++++++++++++")
+
 def setProjectName(_conn, projectID, projectName):
     print("Setting project name")
     try:
