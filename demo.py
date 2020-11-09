@@ -524,7 +524,7 @@ def setIssueDescription(_conn, issueID, description):
         cur = _conn.cursor()
         cur.execute(sql, args)
         
-        updateProject(_conn, issueID)
+        #updateProject(_conn, issueID)
         print("success")
     except Error as e:
         _conn.rollback()
@@ -543,7 +543,7 @@ def setMergeRequestDescription(_conn, mergeID, description):
         cur = _conn.cursor()
         cur.execute(sql, args)
         
-        updateProject(_conn, mergeID)
+        #updateProject(_conn, mergeID)
         print("success")
     except Error as e:
         _conn.rollback()
@@ -562,7 +562,7 @@ def setBranchDescription(_conn, branchID, description):
         cur = _conn.cursor()
         cur.execute(sql, args)
         
-        updateProject(_conn, branchID)
+        #updateProject(_conn, branchID)
         print("success")
     except Error as e:
         _conn.rollback()
@@ -675,6 +675,14 @@ def getBranchIDFromMR(_conn, ID):
                 JOIN branches ON b_issueID = i_issueID
                 JOIN mergerequests ON mr_branchID = b_branchID
                 WHERE branches.b_branchID = ?;
+        
+def getProjectIDFromIssue(_conn, ID):
+    try:
+        sql = """
+                SELECT p_projectID
+                FROM projects
+                JOIN issues ON i_projectID = p_projectID
+                WHERE i_issueID = ?;
             """
         args = [ID]
         cur = _conn.cursor()
@@ -983,19 +991,38 @@ def main():
         populateTable(conn)
         print()
         
+        input("Press Enter to continue...")
         createIssue(conn, 1, "yo issue fat")
         print()
+        
+        input("Press Enter to continue...")
         createBranch(conn, 1, "yo branch fat")
         print()
+        
+        input("Press Enter to continue...")
         createMergeRequest(conn, 1, "yo merge request fat")
         print()
+        
+        input("Press Enter to continue...")
         createProject(conn, "devlogs")
         print()
+        
+        input("Press Enter to continue...")
         projID = getProjectID(conn, "devlogs")
+        
+        input("Press Enter to continue...")
         setProjectDescription(conn, projID, "create logs for developers!")
+        
+        input("Press Enter to continue...")
         setProjectName(conn, projID, "Developer Logging")
+        
+        input("Press Enter to continue...")
         empID = getEmployeeID(conn, "Ronny")
+        
+        input("Press Enter to continue...")
         setProjectManager(conn, projID, empID)
+        
+        input("Press Enter to continue...")
         mergemerge(conn, 2)
         print()
         
