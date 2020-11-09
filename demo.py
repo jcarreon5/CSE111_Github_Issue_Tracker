@@ -583,6 +583,31 @@ def getProjectID(_conn, projectName):
     except Error as e:
         _conn.rollback()
         print(e)
+        
+def getProjectIDFromMR(_conn, ID):
+    try:
+        sql = """
+                SELECT p_projectID
+                FROM projects
+                JOIN issues ON i_projectID = p_projectID
+                JOIN branches ON b_issueID = i_issueID
+                JOIN mergerequests ON mr_branchID = b_branchID
+                WHERE mr_mergeID = 2;
+            """
+        args = [ID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        rows = cur.fetchall()
+        if(len(rows) == 0):
+            return -1
+        if(rows[0] == (None,)):
+            row = [-1]
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
 
 def getEmployeeID(_conn, username):
     try:
@@ -614,29 +639,29 @@ def mergemerge(_conn, mr_mergeID):
     print('+++++++++++++++++++++++++++++++++')
     print('MergeMerge')
     try:
-        sql = """DELETE FROM mergerequest WHERE mergerequest.mr_mergeID  = ?"""
+        sql = """DELETE FROM mergerequests WHERE mr_mergeID  = ?"""
 
         sql2 = """SELECT projects.p_projectID FROM projects 
-            JOIN issues ON issues.i_projectID = projects.p_projectID
-            JOIN branches ON branches.b_issueID = issues.i_issueID
-            JOIN mergerequests ON mergerequests.mr_branchID= branches.b_branchID
-            WHERE mergerequests.mr_mergeID = ?;"""
-
-        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
+            JOIN issues ON i_projectID = p_projectID
+            JOIN branches ON b_issueID = i_issueID
+            JOIN mergerequests ON mr_branchID = b_branchID
+            WHERE mr_mergeID = ?;"""
         
         cur = _conn.cursor()
-        cur.execute(sql,mr_mergeID)
+        cur.execute(sql, [mr_mergeID])
 
-        cur.execute(sql2,mr_mergeID)
+        cur.execute(sql2, [mr_mergeID])
 
-        p_ID = cur.fetchall()
-
-        cur.execute(sql3,p_ID)
+        p_ID = getProjectIDFromMR(_conn, mr_mergeID)
+        if(p_ID == -1):
+            return
+        updateProject(_conn, p_ID)
+        print("success")
 
     except Error as e:
         _conn.rollback()
         print(e)
-    print("success")
+    
     print("++++++++++++++++++++++++++++++++++")
 
 
@@ -823,6 +848,7 @@ def main():
         setProjectName(conn, projID, "Developer Logging")
         empID = getEmployeeID(conn, "Ronny")
         setProjectManager(conn, projID, empID)
+        mergemerge(conn, 2)
         print()
         
         '''
