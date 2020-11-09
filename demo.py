@@ -160,34 +160,116 @@ def populateTable(_conn):
     print("++++++++++++++++++++++++++++++++++")
 
 
-def Q1(_conn):
+def createIssue(_conn, i_projectID, i_desc = ""):
     print("++++++++++++++++++++++++++++++++++")
-    print("Q1")
-    w = open("output/1.out", "w")
+    print("Create Issue")
     try:
-         
         sql = """
-                SELECT *
-                FROM warehouse
-                ORDER BY w_warehousekey
+                SELECT MAX(i_issueID)
+                FROM issues;
             """
+        args = [i_projectID]
         cur = _conn.cursor()
         cur.execute(sql)
         
-        l = '{0} {1} {2} {3} {4}\n'.format("wId".rjust(10), "wName".ljust(39), "wCap".rjust(11), "sId".rjust(10), "nId".rjust(10))
-        print(l)
-        w.write(l)
         print("-------------------------------")
+        print("Fetching largest issueID...")
         rows = cur.fetchall()
-        for row in rows:
-            l = '{0} {1} {2} {3} {4}\n'.format(str(row[0]).rjust(10), str(row[1]).ljust(40), str(row[2]).rjust(10), str(row[3]).rjust(10), str(row[4]).rjust(10))
-            w.write(l)
-            print(l)
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        i_issueID = row[0]
+        print("Largest issueID = " + str(row[0]))
+        i_issueID = str(int(i_issueID) + 1)
+        print("Inserting issue #" + i_issueID + " into table...")
+        sql = """
+                INSERT INTO issues(i_projectID, i_issueID, i_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [i_projectID, i_issueID, i_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
     except Error as e:
         _conn.rollback()
         print(e)
-    w.close()
+    print("success")
     print("++++++++++++++++++++++++++++++++++")
+
+def createBranch(_conn, b_issueID, b_desc = ""):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Create Branch")
+    try:
+        sql = """
+                SELECT MAX(b_branchID)
+                FROM branches;
+            """
+        args = [b_issueID]
+        cur = _conn.cursor()
+        cur.execute(sql)
+        
+        print("-------------------------------")
+        print("Fetching largest branchID...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        b_branchID = row[0]
+        print("Largest branchID = " + str(row[0]))
+        b_branchID = str(int(b_branchID) + 1)
+        print("Inserting branch #" + b_branchID + " into table...")
+        sql = """
+                INSERT INTO branches(b_issueID, b_branchID, b_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [b_issueID, b_branchID, b_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Create Merge Request")
+    try:
+        sql = """
+                SELECT MAX(mr_mergeID)
+                FROM mergerequests;
+            """
+        args = [mr_branchID]
+        cur = _conn.cursor()
+        cur.execute(sql)
+        
+        print("-------------------------------")
+        print("Fetching largest mergeID...")
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        mr_mergeID = row[0]
+        print("Largest mergeID = " + str(row[0]))
+        mr_mergeID = str(int(mr_mergeID) + 1)
+        print("Inserting merge request #" + mr_mergeID + " into table...")
+        sql = """
+                INSERT INTO mergerequests(mr_branchID, mr_mergeID, mr_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [mr_branchID, mr_mergeID, mr_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+    print("success")
+    print("++++++++++++++++++++++++++++++++++")
+
+
+
 
 def Q2(_conn):
     print("++++++++++++++++++++++++++++++++++")
@@ -353,7 +435,13 @@ def main():
         print()
         #populateTable(conn)
         #print()
-
+        
+        createIssue(conn, 1, "yo issue fat")
+        print()
+        createBranch(conn, 1, "yo branch fat")
+        print()
+        createMergeRequest(conn, 1, "yo merge request fat")
+        print()
         '''
         Q1(conn)
         print()
