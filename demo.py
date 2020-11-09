@@ -138,19 +138,138 @@ def populateTable(_conn):
     print("++++++++++++++++++++++++++++++++++")
     print("Populate Table")
     try:
-        branches = []
-        customerprojects = []
-        customers = []
-        developerprojects = []
-        developers = []
-        industry = []
-        issues = []
-        mergerequests = []
-        projectmanagers = []
-        projects = []
-        releases = []
-        sql = "INSERT INTO warehouse VALUES(?, ?, ?, ?, ?)"
+        branches = [] #
+        customerprojects = []#
+        customers = []#
+        developerprojects = []#
+        developers = []#
+        industry = []#
+        issues = []#
+        mergerequests = []#
+        projectmanagers = []#
+        projects = []#
+        releases = []#
+
+        #branches
+        # b_issueID, b_branchID ,  b_desc
+        for i in range(0,5):
+            branches.append([i,i,'kgkhgkhg'])
+
+        #customerprojects
+        # cp_customerID , cp_projectID
+        for i in range(0,5):
+            customerprojects.append([i,i])
+
+        #customers
+        # c_customerID , c_industryID , c_name , c_phone , c_address
+        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street' ])
+        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street' ])
+        customers.append([2,2, 'MY', '159-214-1433','ashjg Street' ])
+        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street' ])
+        customers.append([4,4, 'John', '098-234-7993','ikmn Street' ])
+
+        #developerprojects
+        #dp_employeeID , dp_projectID
+        for i in range(0,5):
+            developerprojects.append([i,i])
+        
+        #developers
+        #e_employeeID , e_username , e_password , e_email , e_createdDate
+        developers.append([0,'THjD', 'AASDFGH', 'sdfghj@gmail.com', '01-01-2020' ])
+        developers.append([1,'ljgd', 'mjhredc', 'sawerty@gmail.com', '01-02-2020' ])
+        developers.append([2,'ertytgfv', 'asdfgcxa', 'plmnbv@gmail.com', '01-03-2020' ])
+        developers.append([3,'Tploiuyd', 'poiuytrsd', 'rtyuij@gmail.com', '01-04-2020' ])
+        developers.append([4,'asdfg', 'oiuytrsdfg', 'mjytrsx@gmail.com', '01-05-2020' ])
+
+        #industry
+        #ind_industryID , ind_industryName
+        industry.append([0,'Food'])
+        industry.append([1,'tech'])
+        industry.append([2,'water'])
+        industry.append([3,'alc'])
+        industry.append([4,'toys'])
+
+        #issues
+        #i_projectID , i_issueID , i_desc
+        issues.append([0, 0, 'asdfghjk'])
+        issues.append([1, 1, 'loiuytf'])
+        issues.append([2, 2, 'vfghjres'])
+        issues.append([3, 3, 'avcxswer'])
+        issues.append([4, 4, 'poiuytrd'])
+
+
+        #mergerequests
+        #mr_branchID , mr_mergeID , mr_desc
+        mergerequests.append([0,0,'oiuytrdsd'])
+        mergerequests.append([1,1,'plkjytrd'])
+        mergerequests.append([2,2,'wertyuhfd tresdfg'])
+        mergerequests.append([3,3,'poiuytdf ewasdv'])
+        mergerequests.append([4,4,'vcxsweftresad'])
+
+        #projectmanagers
+        #pm_employeeID , pm_projectID
+        projectmanagers.append([0,0])
+        projectmanagers.append([1,1])
+        projectmanagers.append([2,2])
+        projectmanagers.append([3,3])
+        projectmanagers.append([4,4])
+
+        #projects
+        #p_projectID , p_projectname , p_desc , p_managerID , p_createdDate , p_lastUpdate 
+
+        projects.append([0,'a', 'sdfghj', 0, '01-02-2020', '01-03-2020'])
+        projects.append([1,'b', 'ljhgfdxdfv', 1, '02-02-2020', '02-03-2020'])
+        projects.append([2,'c', 'wertyhgfc', 2, '03-02-2020', '03-03-2020'])
+        projects.append([3,'d', 'lkjhgfd', 3, '04-02-2020', '04-03-2020'])
+        projects.append([4,'e', 'ougfd', 4, '05-02-2020', '05-03-2020'])
+
+        #releases
+        #r_projectID , r_releaseID , r_descS
+        releases.append([0,0,'sdfghjkiuyt'])
+        releases.append([1,1,'asdfghjkedc'])
+        releases.append([2,2,'smjuytdsxc'])
+        releases.append([3,3,'cvbnmiuysd'])
+        releases.append([4,4,'fghjkltgvedc'])
+
+
+
+
+        sql = "INSERT INTO branches VALUES(?, ?, ?)"
         _conn.executemany(sql, branches)
+
+        sql = "INSERT INTO  customerprojects VALUES(?, ?)"
+        _conn.executemany(sql, customerprojects)
+
+        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?)"
+        _conn.executemany(sql, customers)
+
+        sql = "INSERT INTO developerprojects VALUES(?, ?)"
+        _conn.executemany(sql, developerprojects)
+        
+        sql = "INSERT INTO developers VALUES(?, ?, ?, ?, ?)"
+        _conn.executemany(sql, developers)
+
+        sql = "INSERT INTO industry VALUES(?, ?)"
+        _conn.executemany(sql, industry)
+
+        sql = "INSERT INTO issues VALUES(?, ?, ?)"
+        _conn.executemany(sql, issues)
+
+        sql = "INSERT INTO mergerequests VALUES(?, ?, ?)"
+        _conn.executemany(sql, mergerequests)
+        
+        sql = "INSERT INTO projectmanagers VALUES(?, ?)"
+        _conn.executemany(sql, projectmanagers)  
+
+        sql = "INSERT INTO projects VALUES(?, ?, ?, ?, ?, ?)"
+        _conn.executemany(sql, projects)  
+
+        sql = "INSERT INTO releases VALUES(?, ?, ?)"
+        _conn.executemany(sql, releases)  
+
+
+
+
 
         _conn.commit()
     except Error as e:
