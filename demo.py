@@ -33,85 +33,77 @@ def createTable(_conn):
     print("++++++++++++++++++++++++++++++++++")
     print("Create Table")
     try:
-        sql = """
-            CREATE TABLE developers (
+        commands = [
+            """CREATE TABLE developers (
                 e_employeeID DECIMAL(10, 0) NOT NULL, 
                 e_username VARCHAR(20) NOT NULL, 
                 e_password VARCHAR(45) NOT NULL, 
                 e_email VARCHAR(45) NOT NULL, 
                 e_createdDate DATETIME NOT NULL
-            );
-
-            CREATE TABLE projectmanagers (
+            );""",
+            """CREATE TABLE projectmanagers (
                 pm_employeeID DECIMAL(10, 0) NOT NULL,
                 pm_projectID DECIMAL(10, 0) NOT NULL
-            );
-
-            CREATE TABLE customers (
+            );""",
+            """CREATE TABLE customers (
                 c_customerID DECIMAL(10, 0) NOT NULL, 
                 c_industryID DECIMAL(3, 0), 
                 c_name VARCHAR(45), 
                 c_phone VARCHAR(45),
                 c_address VARCHAR(45),
                 c_createdDate DATETIME NOT NULL
-            );
-
-            CREATE TABLE industry (
+            );""",
+            """CREATE TABLE industry (
                 ind_industryID DECIMAL(3, 0) NOT NULL,
                 ind_industryName VARCHAR(45) NOT NULL
-            );
-
-            CREATE TABLE developerprojects (
+            );""",
+            """CREATE TABLE developerprojects (
                 dp_employeeID DECIMAL(10, 0) NOT NULL,
                 dp_projectID DECIMAL(10, 0) NOT NULL
-            );
-
-            CREATE TABLE customerprojects (
+            );""",
+            """CREATE TABLE customerprojects (
                 cp_customerID DECIMAL(10, 0) NOT NULL,
                 cp_projectID DECIMAL(10, 0) NOT NULL
-            );
-
-            CREATE TABLE projects (
+            );""",
+            """CREATE TABLE projects (
                 p_projectID DECIMAL(10, 0) NOT NULL, 
                 p_projectname VARCHAR(20) NOT NULL, 
                 p_desc VARCHAR(512), 
                 p_managerID DECIMAL(10, 0), 
                 p_createdDate DATETIME NOT NULL,
                 p_lastUpdate DATETIME NOT NULL
-            );
-
-            CREATE TABLE releases(
+            );""",
+            """CREATE TABLE releases(
                 r_projectID DECIMAL(10, 0) NOT NULL,
                 r_releaseID DECIMAL(10, 0) NOT NULL,
                 r_desc VARCHAR(512)
-            );
-
-            CREATE TABLE issues(
+            );""",
+            """CREATE TABLE issues(
                 i_projectID DECIMAL(10, 0) NOT NULL,
                 i_issueID DECIMAL(10, 0) NOT NULL,
                 i_desc VARCHAR(512)
-            );
-
-            CREATE TABLE branches(
+            );""",
+            """CREATE TABLE branches(
                 b_issueID DECIMAL(10, 0) NOT NULL,
                 b_branchID DECIMAL(10, 0) NOT NULL,
                 b_desc VARCHAR(512)
-            );
-
-            CREATE TABLE mergerequests(
+            );""",
+            """CREATE TABLE mergerequests(
                 mr_branchID DECIMAL(10, 0) NOT NULL,
                 mr_mergeID DECIMAL(10, 0) NOT NULL,
                 mr_desc VARCHAR(512)
-            );
-            """
-        _conn.execute(sql)
+            );"""
+            ]
+        for i in commands:
+            sql = i
+            _conn.execute(sql)
 
-        _conn.commit()
-        print("success")
+            _conn.commit()
+            
     except Error as e:
         _conn.rollback()
         print(e)
-
+    print("success")
     print("++++++++++++++++++++++++++++++++++")
 
 def dropTable(_conn):
@@ -357,8 +349,8 @@ def main():
     with conn:
         dropTable(conn)
         print()
-        #createTable(conn)
-        #print()
+        createTable(conn)
+        print()
         #populateTable(conn)
         #print()
 
