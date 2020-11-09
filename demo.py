@@ -649,7 +649,32 @@ def getProjectIDFromMR(_conn, ID):
                 JOIN issues ON i_projectID = p_projectID
                 JOIN branches ON b_issueID = i_issueID
                 JOIN mergerequests ON mr_branchID = b_branchID
-                WHERE mr_mergeID = 2;
+                WHERE mr_mergeID = ?;
+            """
+        args = [ID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        rows = cur.fetchall()
+        if(len(rows) == 0):
+            return -1
+        if(rows[0] == (None,)):
+            row = [-1]
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getBranchIDFromMR(_conn, ID):
+    try:
+        sql = """
+                SELECT projects.p_projectID
+                FROM projects
+                JOIN issues ON i_projectID = p_projectID
+                JOIN branches ON b_issueID = i_issueID
+                JOIN mergerequests ON mr_branchID = b_branchID
+                WHERE branches.b_branchID = ?;
             """
         args = [ID]
         cur = _conn.cursor()
