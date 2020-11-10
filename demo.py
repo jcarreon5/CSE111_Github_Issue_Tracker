@@ -3,35 +3,35 @@ from sqlite3 import Error
 
 
 def openConnection(_dbFile):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Open database: ", _dbFile)
+
+    #print("Open database: ", _dbFile)
 
     conn = None
     try:
         conn = sqlite3.connect(_dbFile)
-        print("success")
+        print("established connection")
     except Error as e:
         print(e)
 
-    print("++++++++++++++++++++++++++++++++++")
+
 
     return conn
 
 def closeConnection(_conn, _dbFile):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Close database: ", _dbFile)
+
+    #print("Close database: ", _dbFile)
 
     try:
         _conn.close()
-        print("success")
+        print("closed connection")
     except Error as e:
         print(e)
 
-    print("++++++++++++++++++++++++++++++++++")
 
-def createTable(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Table")
+
+def createTables(_conn):
+
+    #print("Create Table")
     try:
         commands = [
             """CREATE TABLE developers (
@@ -99,16 +99,14 @@ def createTable(_conn):
             _conn.execute(sql)
 
             _conn.commit()
-            
+        print("created tables")
     except Error as e:
         _conn.rollback()
         print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
+    
+def dropTables(_conn):
 
-def dropTable(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Drop Table")
+    #print("Drop Table")
     try:
         lines = [
                 "DROP TABLE IF EXISTS developers;",
@@ -127,16 +125,14 @@ def dropTable(_conn):
             _conn.execute(sql)
 
             _conn.commit()
+        print("dropped all tables")
     except Error as e:
         _conn.rollback()
         print(e)
 
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
+def populateTables(_conn):
 
-def populateTable(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Populate Table")
+    #print("Populate Table")
     try:
         branches = [] #
         customerprojects = []#
@@ -236,192 +232,58 @@ def populateTable(_conn):
 
         sql = "INSERT INTO branches VALUES(?, ?, ?)"
         _conn.executemany(sql, branches)
+        _conn.commit()
 
         sql = "INSERT INTO  customerprojects VALUES(?, ?)"
         _conn.executemany(sql, customerprojects)
+        _conn.commit()
 
         sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?, ?)"
         _conn.executemany(sql, customers)
+        _conn.commit()
 
         sql = "INSERT INTO developerprojects VALUES(?, ?)"
         _conn.executemany(sql, developerprojects)
+        _conn.commit()
         
         sql = "INSERT INTO developers VALUES(?, ?, ?, ?, ?)"
         _conn.executemany(sql, developers)
+        _conn.commit()
 
         sql = "INSERT INTO industry VALUES(?, ?)"
         _conn.executemany(sql, industry)
+        _conn.commit()
 
         sql = "INSERT INTO issues VALUES(?, ?, ?)"
         _conn.executemany(sql, issues)
-
+        _conn.commit()
+        
         sql = "INSERT INTO mergerequests VALUES(?, ?, ?)"
         _conn.executemany(sql, mergerequests)
+        _conn.commit()
         
         sql = "INSERT INTO projectmanagers VALUES(?, ?)"
         _conn.executemany(sql, projectmanagers)  
+        _conn.commit()
 
         sql = "INSERT INTO projects VALUES(?, ?, ?, ?, ?, ?)"
         _conn.executemany(sql, projects)  
+        _conn.commit()
 
         sql = "INSERT INTO releases VALUES(?, ?, ?)"
         _conn.executemany(sql, releases)  
-
-
-
-
-
         _conn.commit()
+
+        print("populated tables")
     except Error as e:
         _conn.rollback()
         print(e)
-        
-    print("++++++++++++++++++++++++++++++++++")
+   
 
-
-def createIssue(_conn, i_projectID, i_desc = ""):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Issue")
-    try:
-        sql = """
-                SELECT MAX(i_issueID)
-                FROM issues;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        
-        print("-------------------------------")
-        print("Fetching largest issueID...")
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        i_issueID = row[0]
-        print("Largest issueID = " + str(row[0]))
-        i_issueID = str(int(i_issueID) + 1)
-        print("Inserting issue #" + i_issueID + " into table...")
-        sql = """
-                INSERT INTO issues(i_projectID, i_issueID, i_desc)
-                VALUES(?, ?, ?)
-        """
-        args = [i_projectID, i_issueID, i_desc]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
-
-def createBranch(_conn, b_issueID, b_desc = ""):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Branch")
-    try:
-        sql = """
-                SELECT MAX(b_branchID)
-                FROM branches;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        
-        print("-------------------------------")
-        print("Fetching largest branchID...")
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        b_branchID = row[0]
-        print("Largest branchID = " + str(row[0])) 
-        b_branchID = str(int(b_branchID) + 1)
-        print("Inserting branch #" + b_branchID + " into table...")
-        sql = """
-                INSERT INTO branches(b_issueID, b_branchID, b_desc)
-                VALUES(?, ?, ?)
-        """
-        args = [b_issueID, b_branchID, b_desc]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
-
-def createReleases(_conn, r_projectID, r_desc = ""):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Realese")
-    try:
-        sql = """
-                SELECT MAX(r_releaseID)
-                FROM releases;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        
-        print("-------------------------------")
-        print("Fetching largest releaseID...")
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        r_releaseID = row[0]
-        print("Largest releaseID = " + str(row[0]))
-        r_releaseID= str(int(r_releaseID) + 1)
-        print("Inserting releases #" + r_releaseID + " into table...")
-        sql = """
-                INSERT INTO releases(r_projectID, r_releaseID, r_desc)
-                VALUES(?, ?, ?)
-        """
-        args = [r_projectID, r_releaseID, r_desc]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
-
-def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Merge Request")
-    try:
-        sql = """
-                SELECT MAX(mr_mergeID)
-                FROM mergerequests;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        
-        print("-------------------------------")
-        print("Fetching largest mergeID...")
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        mr_mergeID = row[0]
-        print("Largest mergeID = " + str(row[0]))
-        mr_mergeID = str(int(mr_mergeID) + 1)
-        print("Inserting merge request #" + mr_mergeID + " into table...")
-        sql = """
-                INSERT INTO mergerequests(mr_branchID, mr_mergeID, mr_desc)
-                VALUES(?, ?, ?)
-        """
-        args = [mr_branchID, mr_mergeID, mr_desc]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
-
+   
 def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Create Project")
+
+    #print("Create Project")
     try:
         sql = """
                 SELECT MAX(p_projectID)
@@ -429,15 +291,15 @@ def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
             """
         cur = _conn.cursor()
         cur.execute(sql)
-        print("-------------------------------")
-        print("Fetching largest projectID...")
+        _conn.commit()
+
         rows = cur.fetchall()
         if(rows[0] == (None,)):
             row = [0]
         else: 
             row = rows[0]
         p_projectID = row[0]
-        print("Largest mergeID = " + str(row[0]))
+
         p_projectID = str(int(p_projectID) + 1)
         
         sql = """
@@ -445,18 +307,18 @@ def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
             """
         cur = _conn.cursor()
         cur.execute(sql)
-        print("-------------------------------")
-        print("Getting current timestamp...")
+        _conn.commit()
+
         rows = cur.fetchall()
         if(rows[0] == (None,)):
             row = [0]
         else: 
             row = rows[0]
         p_createdDate = p_lastUpdate = row[0]
-        print("Current time = " + str(row[0]))
+
         
         
-        print("Inserting project #" + p_projectID + " into table...")
+
         sql = """
                 INSERT INTO projects(p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate)
                 VALUES(?, ?, ?, ?, ?)
@@ -464,147 +326,88 @@ def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
         args = [p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate]
         cur = _conn.cursor()
         cur.execute(sql, args)
+        _conn.commit()
         
         if(len(p_managerID) != 0):
             setProjectManager(_conn, p_projectID, p_managerID)
-        print("success")
+        print("created project: " + str(p_projectID))
     except Error as e:
         _conn.rollback()
         print(e)
     
-    print("++++++++++++++++++++++++++++++++++")
-
-def setProjectManager(_conn, projectID, managerID):
-    print("Setting project manager")
-    try:
-        sql = """
-            UPDATE projects
-            SET p_managerID = ?
-            WHERE p_projectID = ?;
-        """
-        args = [managerID, projectID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-        
-        updateProject(_conn, projectID)
-        print("success")
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("++++++++++++++++++++++++++++++++++")
-
-def setProjectDescription(_conn, projectID, description):
-    print("Setting project description")
-    try:
-        sql = """
-            UPDATE projects
-            SET p_desc = ?
-            WHERE p_projectID = ?;
-        """
-        args = [description, projectID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-        
-        updateProject(_conn, projectID)
-        print("success")
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("++++++++++++++++++++++++++++++++++")
-
-def setIssueDescription(_conn, issueID, description):
-    print("Setting issue description")
-    try:
-        sql = """
-            UPDATE issues
-            SET i_desc = ?
-            WHERE i_issueID = ?;
-        """
-        args = [description, issueID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-        
-        #updateProject(_conn, issueID)
-        print("success")
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("++++++++++++++++++++++++++++++++++")
-
-def setMergeRequestDescription(_conn, mergeID, description):
-    print("Setting merge request description")
-    try:
-        sql = """
-            UPDATE mergerequests
-            SET mr_desc = ?
-            WHERE mr_mergeID = ?;
-        """
-        args = [description, mergeID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-        
-        #updateProject(_conn, mergeID)
-        print("success")
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("++++++++++++++++++++++++++++++++++")
-
-def setBranchDescription(_conn, branchID, description):
-    print("Setting issue description")
-    try:
-        sql = """
-            UPDATE branch
-            SET b_desc = ?
-            WHERE b_branchID = ?;
-        """
-        args = [description, branchID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
-        
-        #updateProject(_conn, branchID)
-        print("success")
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("++++++++++++++++++++++++++++++++++")
-
-def setProjectName(_conn, projectID, projectName):
-    print("Setting project name")
+def setProjectName(_conn, p_projectID, p_projectName):
+    #print("Setting project name")
     try:
         sql = """
             UPDATE projects
             SET p_projectName = ?
             WHERE p_projectID = ?;
         """
-        args = [projectName, projectID]
+        args = [p_projectName, p_projectID]
         cur = _conn.cursor()
         cur.execute(sql, args)
+        _conn.commit()
         
-        updateProject(_conn, projectID)
-        print("success")
+        updateProject(_conn, p_projectID)
+        print("set project: " + str(p_projectID) + "'s name to: " + p_projectName)
     except Error as e:
         _conn.rollback()
         print(e)
-    print("++++++++++++++++++++++++++++++++++")
 
-def updateProject(_conn, projectID):
-    print("Setting project manager")
+def setProjectManager(_conn, p_projectID, p_managerID):
+    #print("Setting project manager")
+    try:
+        sql = """
+            UPDATE projects
+            SET p_managerID = ?
+            WHERE p_projectID = ?;
+        """
+        args = [p_managerID, p_projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        updateProject(_conn, p_projectID)
+        print("set project: " + str(p_projectID) + "'s manager to: " + str(p_managerID))
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setProjectDescription(_conn, p_projectID, p_desc):
+    #print("Setting project description")
+    try:
+        sql = """
+            UPDATE projects
+            SET p_desc = ?
+            WHERE p_projectID = ?;
+        """
+        args = [p_desc, p_projectID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        updateProject(_conn, p_projectID)
+        print("set project: " + str(p_projectID) + "'s description to: " + p_desc)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def updateProject(_conn, p_projectID):
+
     try:
         sql = """
                 SELECT datetime('now');
             """
         cur = _conn.cursor()
         cur.execute(sql)
-        print("-------------------------------")
-        print("Getting current timestamp...")
+
         rows = cur.fetchall()
         if(rows[0] == (None,)):
             row = [0]
         else: 
             row = rows[0]
         p_lastUpdate = row[0]
-        print("Current time = " + str(row[0]))
+
         
         sql = """
                 UPDATE projects
@@ -612,36 +415,404 @@ def updateProject(_conn, projectID):
                 WHERE p_projectID = ?;
         """
         
-        args = [p_lastUpdate, projectID]
+        args = [p_lastUpdate, p_projectID]
         cur = _conn.cursor()
         cur.execute(sql, args)
-        print("success")
+        _conn.commit()
+        #print("updated project: " + str(p_projectID))
     except Error as e:
         _conn.rollback()
         print(e)
-    print("++++++++++++++++++++++++++++++++++")
 
-def getProjectID(_conn, projectName):
+def getProjectID(_conn, p_projectName):
     try:
         sql = """
                     SELECT p_projectID
                     FROM projects
                     WHERE p_projectName = ?;
             """
-        args = [projectName]
+        args = [p_projectName]
         cur = _conn.cursor()
         cur.execute(sql, args)
+        _conn.commit()
         rows = cur.fetchall()
         if(rows[0] == (None,)):
-            row = [-1]
+            return -1
         else: 
             row = rows[0]
         return row[0]
     except Error as e:
         _conn.rollback()
         print(e)
+
+
+
+def createRelease(_conn, r_projectID, r_desc = ""):
+
+    #print("Create Realese")
+    try:
+        sql = """
+                SELECT MAX(r_releaseID)
+                FROM releases;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        _conn.commit()
         
-def getProjectIDFromMR(_conn, ID):
+
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        r_releaseID = row[0]
+
+        r_releaseID= str(int(r_releaseID) + 1)
+
+        sql = """
+                INSERT INTO releases(r_projectID, r_releaseID, r_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [r_projectID, r_releaseID, r_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        print("created release: " + str(r_releaseID))
+    except Error as e:
+        _conn.rollback()
+        print(e)
+ 
+
+
+def createIssue(_conn, i_projectID, i_desc = ""):
+
+    #print("Create Issue")
+    try:
+        sql = """
+                SELECT MAX(i_issueID)
+                FROM issues;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        _conn.commit()
+        
+
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        i_issueID = row[0]
+
+        i_issueID = str(int(i_issueID) + 1)
+
+        sql = """
+                INSERT INTO issues(i_projectID, i_issueID, i_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [i_projectID, i_issueID, i_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        print("created issue: " + str(i_issueID) + " for project: " + str(i_projectID))
+    except Error as e:
+        _conn.rollback()
+        print(e)
+  
+def setIssueDescription(_conn, i_issueID, i_desc):
+    #print("Setting issue description")
+    try:
+        sql = """
+            UPDATE issues
+            SET i_desc = ?
+            WHERE i_issueID = ?;
+        """
+        args = [i_desc, i_issueID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromIssue(_conn, i_issueID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set issue: " + str(i_issueID) + "'s description to: " + i_desc)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def mergeIssue(_conn, i_issueID):
+    try:
+        sql = """DELETE FROM issues WHERE i_issueID  = ?"""
+
+        p_ID = getProjectIDFromIssue(_conn, i_issueID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        
+        rows = getAllBranchesFromIssue(_conn, i_issueID)
+        for row in rows:
+            mergeBranch(_conn, row[0])
+        
+        cur = _conn.cursor()
+        cur.execute(sql, [i_issueID])
+        _conn.commit()
+        cur = _conn.cursor()
+
+
+        
+        print("merged issue: " + str(i_issueID))
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getProjectIDFromIssue(_conn, i_issueID):
+    try:
+        sql = """
+                SELECT p_projectID
+                FROM projects
+                JOIN issues ON i_projectID = p_projectID
+                WHERE i_issueID = ?;
+            """
+        args = [i_issueID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        rows = cur.fetchall()
+        if(len(rows) == 0):
+            return -1
+        if(rows[0] == (None,)):
+            return -1
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getAllIssuesForProject(_conn, p_projectID):
+    try:
+        sql = """
+                SELECT i_issueID
+                FROM issues
+                JOIN projects ON p_projectID = i_projectID
+                WHERE p_projectID = ?;
+        """
+        cur = _conn.cursor()
+        cur.execute(sql, [p_projectID])
+        _conn.commit()
+        
+        rows = cur.fetchall()
+        return rows
+        
+        
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+
+
+def createBranch(_conn, b_issueID, b_desc = ""):
+
+    #print("Create Branch")
+    try:
+        sql = """
+                SELECT MAX(b_branchID)
+                FROM branches;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        _conn.commit()
+        
+
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        b_branchID = row[0]
+
+        b_branchID = str(int(b_branchID) + 1)
+
+        sql = """
+                INSERT INTO branches(b_issueID, b_branchID, b_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [b_issueID, b_branchID, b_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        print("created branch: " + str(b_branchID) + " for issue: " + str(b_issueID))
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setBranchDescription(_conn, b_branchID, b_desc):
+    #print("Setting issue description")
+    try:
+        sql = """
+            UPDATE branch
+            SET b_desc = ?
+            WHERE b_branchID = ?;
+        """
+        args = [b_desc, b_branchID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromBranch(_conn, b_branchID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        #updateProject(_conn, branchID)
+        print("set branch: " + str(b_branchID) + "'s description to: " + b_desc)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def mergeBranch(_conn, b_branchID):
+    try:
+        sql = """DELETE FROM branches WHERE b_branchID  = ?"""
+
+        p_ID = getProjectIDFromBranch(_conn, b_branchID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+            
+        rows = getAllMergeRequestsFromBranch(_conn, b_branchID)
+        for row in rows:
+            mergeMergeRequest(_conn, row[0])
+            
+        cur = _conn.cursor()
+        cur.execute(sql, [b_branchID])
+        _conn.commit()
+        cur = _conn.cursor()
+        
+        
+        
+        print("merged branch: " + str(b_branchID))
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getProjectIDFromBranch(_conn, b_branchID):
+    try:
+        sql = """
+                SELECT p_projectID
+                FROM projects
+                JOIN issues ON i_projectID = p_projectID
+                JOIN branches ON b_issueID = i_issueID
+                WHERE b_branchID = ?;
+            """
+        args = [b_branchID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        rows = cur.fetchall()
+        if(len(rows) == 0):
+            return -1
+        if(rows[0] == (None,)):
+            return -1
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getAllBranchesFromIssue(_conn, i_issueID):
+    try:
+        sql = """
+                SELECT b_branchID
+                FROM branches
+                JOIN issues ON i_issueID = b_issueID
+                WHERE i_issueID = ?;
+        """
+        cur = _conn.cursor()
+        cur.execute(sql, [i_issueID])
+        _conn.commit()
+        
+        rows = cur.fetchall()
+        return rows
+        
+        
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+
+
+def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
+
+    #print("Create Merge Request")
+    try:
+        sql = """
+                SELECT MAX(mr_mergeID)
+                FROM mergerequests;
+            """
+        cur = _conn.cursor()
+        cur.execute(sql)
+        _conn.commit()
+        
+
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            row = [0]
+        else: 
+            row = rows[0]
+        mr_mergeID = row[0]
+
+        mr_mergeID = str(int(mr_mergeID) + 1)
+
+        sql = """
+                INSERT INTO mergerequests(mr_branchID, mr_mergeID, mr_desc)
+                VALUES(?, ?, ?)
+        """
+        args = [mr_branchID, mr_mergeID, mr_desc]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        print("created merge request: " + str(mr_mergeID) + " for branch: " + str(mr_branchID))
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setMergeRequestDescription(_conn, mr_mergeID, mr_desc):
+    #print("Setting merge request description")
+    try:
+        sql = """
+            UPDATE mergerequests
+            SET mr_desc = ?
+            WHERE mr_mergeID = ?;
+        """
+        args = [mr_desc, mr_mergeID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromMR(_conn, mr_mergeID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set merge request: " + str(mr_mergeID) + "'s description to: " + mr_desc)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def mergeMergeRequest(_conn, mr_mergeID):
+    try:
+        sql = """DELETE FROM mergerequests WHERE mr_mergeID  = ?"""
+        p_ID = getProjectIDFromMR(_conn, mr_mergeID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        cur = _conn.cursor()
+        cur.execute(sql, [mr_mergeID])
+        _conn.commit()
+        
+        print("merged merge request: " + str(mr_mergeID))
+
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def getProjectIDFromMR(_conn, mr_mergeID):
     try:
         sql = """
                 SELECT p_projectID
@@ -651,14 +822,15 @@ def getProjectIDFromMR(_conn, ID):
                 JOIN mergerequests ON mr_branchID = b_branchID
                 WHERE mr_mergeID = ?;
             """
-        args = [ID]
+        args = [mr_mergeID]
         cur = _conn.cursor()
         cur.execute(sql, args)
+        _conn.commit()
         rows = cur.fetchall()
         if(len(rows) == 0):
             return -1
         if(rows[0] == (None,)):
-            row = [-1]
+            return -1
         else: 
             row = rows[0]
         return row[0]
@@ -666,331 +838,50 @@ def getProjectIDFromMR(_conn, ID):
         _conn.rollback()
         print(e)
 
-def getProjectIDFromBranch(_conn, ID):
+def getAllMergeRequestsFromBranch(_conn, b_branchID):
     try:
         sql = """
-                SELECT p_projectID
-                FROM projects
-                JOIN issues ON i_projectID = p_projectID
-                JOIN branches ON b_issueID = i_issueID
+                SELECT mr_mergeID
+                FROM mergerequests
+                JOIN branches ON b_branchID = mr_branchID
                 WHERE b_branchID = ?;
-            """
-        args = [ID]
+        """
         cur = _conn.cursor()
-        cur.execute(sql, args)
-        rows = cur.fetchall()
-        if(len(rows) == 0):
-            return -1
-        if(rows[0] == (None,)):
-            row = [-1]
-        else: 
-            row = rows[0]
-        return row[0]
-    except Error as e:
-        _conn.rollback()
-        print(e)
+        cur.execute(sql, [b_branchID])
+        _conn.commit()
         
-def getProjectIDFromIssue(_conn, ID):
-    try:
-        sql = """
-                SELECT p_projectID
-                FROM projects
-                JOIN issues ON i_projectID = p_projectID
-                WHERE i_issueID = ?;
-            """
-        args = [ID]
-        cur = _conn.cursor()
-        cur.execute(sql, args)
         rows = cur.fetchall()
-        if(len(rows) == 0):
-            return -1
-        if(rows[0] == (None,)):
-            row = [-1]
-        else: 
-            row = rows[0]
-        return row[0]
+        return rows
+        
+        
     except Error as e:
         _conn.rollback()
         print(e)
 
-def getEmployeeID(_conn, username):
+
+
+def getEmployeeID(_conn, e_username):
     try:
         sql = """
                     SELECT e_employeeID
                     FROM developers
                     WHERE e_username LIKE ?;
             """
-        args = [username]
+        args = [e_username]
         cur = _conn.cursor()
         cur.execute(sql, args)
+        _conn.commit()
         rows = cur.fetchall()
         if(rows[0] == (None,)):
-            row = [-1]
+            return -1
         else: 
             row = rows[0]
         return row[0]
     except Error as e:
         _conn.rollback()
         print(e)
-        
-def mergemerge(_conn, mr_mergeID):
-    #teake the id from merge request table
-    # using that it will go to branches using branch id
-    # go to issus using issue id 
-    # go to projects using porjects id 
-    #updated.p_lastupdate
-    #delete entry from merge request table
-    print('+++++++++++++++++++++++++++++++++')
-    print('MergeMerge')
-    try:
-        sql = """DELETE FROM mergerequests WHERE mr_mergeID  = ?"""
-
-        sql2 = """SELECT projects.p_projectID FROM projects 
-            JOIN issues ON i_projectID = p_projectID
-            JOIN branches ON b_issueID = i_issueID
-            JOIN mergerequests ON mr_branchID = b_branchID
-            WHERE mr_mergeID = ?;"""
-        
-        cur = _conn.cursor()
-        cur.execute(sql, [mr_mergeID])
-
-        cur.execute(sql2, [mr_mergeID])
-
-        p_ID = getProjectIDFromMR(_conn, mr_mergeID)
-        if(p_ID == -1):
-            return
-        updateProject(_conn, p_ID)
-        print("success")
-
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    
-    print("++++++++++++++++++++++++++++++++++")
-
-def mergeIssues(_conn, i_issueID):
-    #teake the id from merge request table
-    # using that it will go to branches using branch id
-    # go to issus using issue id 
-    # go to projects using porjects id 
-    #updated.p_lastupdate
-    #delete entry from merge request table
-    print('+++++++++++++++++++++++++++++++++')
-    print('MergeIssues')
-    try:
-        sql = """DELETE FROM issues WHERE issues.i_issueID  = ?"""
-
-        sql2 = """SELECT projects.p_projectID FROM projects 
-            JOIN issues ON issues.i_projectID = projects.p_projectID
-            WHERE issues.i_issueID = ?;"""
-
-        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
-        
-        cur = _conn.cursor()
-        cur.execute(sql,i_issueID)
-
-        cur.execute(sql2,i_issueID)
-
-        s_ID = cur.fetchall()
-
-        cur.execute(sql3,s_ID)
-
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
-
-def mergeBranches(_conn, b_branchID):
-    #teake the id from merge request table
-    # using that it will go to branches using branch id
-    # go to issus using issue id 
-    # go to projects using porjects id 
-    #updated.p_lastupdate
-    #delete entry from merge request table
-    print('+++++++++++++++++++++++++++++++++')
-    print('MergeBranches')
-    try:
-        sql = """DELETE FROM branches WHERE branches.b_branchID  = ?"""
-
-        sql2 = """SELECT projects.p_projectID FROM projects  
-            JOIN issues ON issues.i_projectID = projects.p_projectID 
-            JOIN branches ON branches.b_issueID = issues.i_issueID
-            WHERE branches.b_branchID = ?;"""
-
-        sql3 = """UPDATE projects SET projects.p_lastUpdate = "11-08-2020" WHERE projects.p_projectID = ?;"""
-        
-        cur = _conn.cursor()
-        cur.execute(sql,b_branchID)
-
-        cur.execute(sql2,b_branchID)
-
-        b_ID = cur.fetchall()
-
-        cur.execute(sql3,b_ID)
-
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    print("success")
-    print("++++++++++++++++++++++++++++++++++")
 
 
-
-
-
-
-def Q2(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Q2")
-    w = open("output/2.out", "w")
-    try:
-        sql = """
-                SELECT
-                    n_name,
-                    COUNT(w_warehousekey), 
-                    SUM(w_capacity)
-                FROM 
-                    warehouse
-                JOIN
-                    nation ON w_nationkey = n_nationkey
-                GROUP BY
-                    w_nationkey
-                ORDER BY 
-                    COUNT(w_warehousekey) desc, 
-                    SUM(w_capacity) desc, 
-                    n_name asc
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        
-        l = '{0} {1} {2}\n'.format("nation".ljust(40), "numW".rjust(10), "totCap".rjust(10))
-        print(l)
-        w.write(l)
-        print("-------------------------------")
-        rows = cur.fetchall()
-        for row in rows:
-            l = '{0} {1} {2}\n'.format(str(row[0]).ljust(40), str(row[1]).rjust(10), str(row[2]).rjust(10))
-            w.write(l)
-            print(l)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    w.close()
-    print("++++++++++++++++++++++++++++++++++")
-
-def Q3(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Q3")
-    w = open("output/3.out", "w")
-    try:
-        with open("input/3.in", "r") as nation:
-            temp = nation.readline()
-            temp = temp.rstrip("\n")
-            sql = """
-                    SELECT 
-                        s_name, 
-                        sn.n_name, 
-                        w_name
-                    FROM
-                        supplier
-                    JOIN
-                        warehouse ON s_suppkey = w_suppkey
-                    JOIN
-                        nation AS wn ON w_nationkey = wn.n_nationkey
-                    JOIN
-                        nation AS sn ON s_nationkey = sn.n_nationkey
-                    WHERE
-                        wn.n_name = "JAPAN"
-                    ORDER BY
-                        s_name
-                    
-                """
-            args = [temp]
-            cur = _conn.cursor()
-            cur.execute(sql)
-            
-            l = '{0} {1} {2}\n'.format("supplier".ljust(20), "nation".ljust(20), "warehouse".ljust(10))
-            print(l)
-            w.write(l)
-            print("-------------------------------")
-            rows = cur.fetchall()
-            for row in rows:
-                l = '{0} {1} {2}\n'.format(str(row[0]).ljust(20), str(row[1]).ljust(20), str(row[2]).ljust(10))
-                w.write(l)
-                print(l)
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    w.close()
-    print("++++++++++++++++++++++++++++++++++")
-
-def Q4(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Q4")
-    w = open("output/4.out", "w")
-    try:
-        with open("input/4.in", "r") as nation:
-            temp = nation.readlines()
-            nation = temp[0].rstrip("\n")
-            thresh = int(temp[1])
-            args = [nation, thresh]
-            sql = """
-                SELECT
-                    w_name,
-                    w_capacity
-                FROM
-                    warehouse
-                JOIN
-                    nation ON n_nationkey = w_nationkey
-                JOIN
-                    region ON r_regionkey = n_regionkey
-                WHERE
-                    r_name = ?
-                    AND w_capacity > ?
-                ORDER BY
-                    w_capacity DESC
-            """
-            cur = _conn.cursor()
-            cur.execute(sql, args)
-            
-            l = '{0} {1}\n'.format("warehouse".ljust(30), "capacity".rjust(20))
-            print(l)
-            w.write(l)
-            print("-------------------------------")
-            rows = cur.fetchall()
-            for row in rows:
-                l = '{0} {1}\n'.format(str(row[0]).ljust(30), str(row[1]).rjust(20))
-                w.write(l)
-                print(l)
-
-        _conn.commit()
-    except Error as e:
-        _conn.rollback()
-        print(e)
-    w.close()
-    print("++++++++++++++++++++++++++++++++++")
-
-def Q5(_conn):
-    print("++++++++++++++++++++++++++++++++++")
-    print("Q5")
-    w = open("output/5.out", "w")
-    t1 = ["region", "AFRICA", "AMERICA", "ASIA", "EUROPE", "MIDDLE EAST"]
-    t2 = ["capacity", 4314, 10446, 0, 8402, 10866]
-    #l = '{0} {1}\n'.format("region".ljust(30), "capacity".rjust(20))
-    #print(l)
-    #w.write(l)
-    #print("-------------------------------")
-    #rows = cur.fetchall()
-    for row in range(len(t1)):
-        l = '{0} {1}\n'.format(str(t1[row]).ljust(20), str(t2[row]).rjust(20))
-        w.write(l)
-        #w.write(row)
-        print(l)
-    w.close()
-    
-
-    print("++++++++++++++++++++++++++++++++++")
 
 def main():
     database = r"data/tpch.sqlite"
@@ -998,60 +889,88 @@ def main():
     # create a database connection
     conn = openConnection(database)
     with conn:
-        dropTable(conn)
+        
+        # SQL Connections
+        dropTables(conn)
         print()
-        createTable(conn)
+        createTables(conn)
         print()
-        populateTable(conn)
+        populateTables(conn)
         print()
         
-        input("Press Enter to continue...")
+        # Adding to table with all fields
+        print("==================================")
         createIssue(conn, 1, "yo issue fat")
         print()
         
-        input("Press Enter to continue...")
+        
         createBranch(conn, 1, "yo branch fat")
         print()
         
-        input("Press Enter to continue...")
+        
         createMergeRequest(conn, 1, "yo merge request fat")
         print()
         
-        input("Press Enter to continue...")
+        
         createProject(conn, "devlogs")
         print()
         
-        input("Press Enter to continue...")
+        # Recursive merging and adding to table with minimum fields
+        print("==================================")
+        
+        createIssue(conn, 3)
+        print()
+        
+        createBranch(conn, 6)
+        print()
+        
+        createBranch(conn, 6)
+        print()
+        
+        createMergeRequest(conn, 6)
+        print()
+        
+        createMergeRequest(conn, 6)
+        print()
+        
+        createMergeRequest(conn, 6)
+        print()
+        
+        mergeIssue(conn, 6)
+        print()
+        
+        # Modifying properties
+        print("==================================")
+        
+        
         projID = getProjectID(conn, "devlogs")
-        
-        input("Press Enter to continue...")
         setProjectDescription(conn, projID, "create logs for developers!")
+        print()
+
         
-        input("Press Enter to continue...")
         setProjectName(conn, projID, "Developer Logging")
+        print()
         
-        input("Press Enter to continue...")
+        
         empID = getEmployeeID(conn, "Ronny")
-        
-        input("Press Enter to continue...")
         setProjectManager(conn, projID, empID)
-        
-        input("Press Enter to continue...")
-        mergemerge(conn, 2)
         print()
         
-        '''
-        Q1(conn)
+        # Standalone merging
+        print("==================================")
+        
+        
+        mergeMergeRequest(conn, 2)
         print()
-        Q2(conn)
+        
+        
+        mergeBranch(conn, 2)
         print()
-        Q3(conn)
+        
+        
+        mergeIssue(conn, 2)
         print()
-        Q4(conn)
-        print()
-        Q5(conn)
-        print()
-        '''
+        
     closeConnection(conn, database)
 
 
