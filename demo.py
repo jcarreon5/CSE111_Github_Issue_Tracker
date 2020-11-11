@@ -35,14 +35,14 @@ def createTables(_conn):
     try:
         commands = [
             """CREATE TABLE developers (
-                e_employeeID DECIMAL(10, 0) NOT NULL, 
-                e_username VARCHAR(20) NOT NULL, 
-                e_password VARCHAR(45) NOT NULL, 
-                e_email VARCHAR(45) NOT NULL, 
-                e_createdDate DATETIME NOT NULL
+                d_developerID DECIMAL(10, 0) NOT NULL, 
+                d_username VARCHAR(20) NOT NULL, 
+                d_password VARCHAR(45) NOT NULL, 
+                d_email VARCHAR(45) NOT NULL, 
+                d_createdDate DATETIME NOT NULL
             );""",
             """CREATE TABLE projectmanagers (
-                pm_employeeID DECIMAL(10, 0) NOT NULL,
+                pm_developerID DECIMAL(10, 0) NOT NULL,
                 pm_projectID DECIMAL(10, 0) NOT NULL
             );""",
             """CREATE TABLE customers (
@@ -58,7 +58,7 @@ def createTables(_conn):
                 ind_industryName VARCHAR(45) NOT NULL
             );""",
             """CREATE TABLE developerprojects (
-                dp_employeeID DECIMAL(10, 0) NOT NULL,
+                dp_developerID DECIMAL(10, 0) NOT NULL,
                 dp_projectID DECIMAL(10, 0) NOT NULL
             );""",
             """CREATE TABLE customerprojects (
@@ -165,12 +165,12 @@ def populateTables(_conn):
         customers.append([4,4, 'John', '098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
 
         #developerprojects
-        #dp_employeeID , dp_projectID
+        #dp_developerID , dp_projectID
         for i in range(0,5):
             developerprojects.append([i,i])
         
         #developers
-        #e_employeeID , e_username , e_password , e_email , e_createdDate
+        #d_developerID , d_username , d_password , d_email , d_createdDate
         developers.append([0,'Timmy', 'AASDFGH', 'sdfghj@gmail.com', '2020-01-11 03:55:18' ])
         developers.append([1,'Jimmy', 'mjhredc', 'sawerty@gmail.com', '2020-02-11 03:55:18' ])
         developers.append([2,'Kimmy', 'asdfgcxa', 'plmnbv@gmail.com', '2020-03-11 03:55:18' ])
@@ -203,7 +203,7 @@ def populateTables(_conn):
         mergerequests.append([4,4,'vcxsweftresad'])
 
         #projectmanagers
-        #pm_employeeID , pm_projectID
+        #pm_developerID , pm_projectID
         projectmanagers.append([0,0])
         projectmanagers.append([1,1])
         projectmanagers.append([2,2])
@@ -609,41 +609,6 @@ def getAllIssuesForProject(_conn, p_projectID):
         _conn.rollback()
         print(e)
 
-def changePassword(_conn, employeeID, NewPassword):
-    try:
-        sql = """ 
-            UPDATE developers
-            SET developers.e_password = ?
-            WHERE developers.e_employeeID = ?;
-            """
-        
-        cur = _conn.cursor()
-        args = [employeeID,NewPassword]
-        
-        cur.execute(sql, args)
-        _conn.commit()
-    
-    except Error as e:
-        _conn.rollback()
-        print(e)
-
-def changeEmail(_conn, employeeID, newEmail):
-    try:
-        sql = """ 
-            UPDATE developers
-            SET developers.e_email = ?
-            WHERE developers.e_employeeID = ?;
-            """
-        
-        cur = _conn.cursor()
-        args = [employeeID,newEmail]
-        
-        cur.execute(sql, args)
-        _conn.commit()
-    
-    except Error as e:
-        _conn.rollback()
-        print(e)
 
 
 def createBranch(_conn, b_issueID, b_desc = ""):
@@ -895,14 +860,14 @@ def getAllMergeRequestsFromBranch(_conn, b_branchID):
 
 
 
-def getEmployeeID(_conn, e_username):
+def getDeveloperID(_conn, d_username):
     try:
         sql = """
-                    SELECT e_employeeID
+                    SELECT d_developerID
                     FROM developers
-                    WHERE e_username LIKE ?;
+                    WHERE d_username LIKE ?;
             """
-        args = [e_username]
+        args = [d_username]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
@@ -912,6 +877,42 @@ def getEmployeeID(_conn, e_username):
         else: 
             row = rows[0]
         return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setEmployeePassword(_conn, d_developerID, d_password):
+    try:
+        sql = """ 
+            UPDATE developers
+            SET developers.d_password = ?
+            WHERE developers.d_developerID = ?;
+            """
+        
+        cur = _conn.cursor()
+        args = [d_developerID,d_password]
+        
+        cur.execute(sql, args)
+        _conn.commit()
+    
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setEmployeeEmail(_conn, d_developerID, d_email):
+    try:
+        sql = """ 
+            UPDATE developers
+            SET developers.d_email = ?
+            WHERE developers.d_developerID = ?;
+            """
+        
+        cur = _conn.cursor()
+        args = [d_developerID,d_email]
+        
+        cur.execute(sql, args)
+        _conn.commit()
+    
     except Error as e:
         _conn.rollback()
         print(e)
@@ -1090,7 +1091,7 @@ def main():
         print()
         
         
-        empID = getEmployeeID(conn, "Ronny")
+        empID = getDeveloperID(conn, "Ronny")
         setProjectManager(conn, projID, empID)
         print()
         
