@@ -79,4 +79,3 @@ CREATE TABLE mergerequests(
     mr_mergeID DECIMAL(10, 0) NOT NULL,
     mr_desc VARCHAR(512)
 );
-

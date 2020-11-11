@@ -285,22 +285,6 @@ def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
 
     #print("Create Project")
     try:
-        sql = """
-                SELECT MAX(p_projectID)
-                FROM projects;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        _conn.commit()
-
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        p_projectID = row[0]
-
-        p_projectID = str(int(p_projectID) + 1)
         
         sql = """
                 SELECT datetime('now');
@@ -317,16 +301,29 @@ def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
         p_createdDate = p_lastUpdate = row[0]
 
         
-        
-
         sql = """
-                INSERT INTO projects(p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate)
+                INSERT INTO projects(p_projectName, p_desc, p_createdDate, p_lastUpdate)
                 VALUES(?, ?, ?, ?, ?)
         """
-        args = [p_projectID, p_projectName, p_desc, p_createdDate, p_lastUpdate]
+        args = [p_projectName, p_desc, p_createdDate, p_lastUpdate]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
+
+        sql = """ 
+                SELECT p_projectID 
+                FROM projects
+                WHERE p_createdDate =?
+                AND p_desc = ?
+                AND p_projectName =?
+                AND p_lastUpdate = ?;
+                """
+        cur = _conn.cursor()
+        cur.execute(sql,args)
+
+        _conn.commit()
+
+        p_projectID = cur.fetchall()
         
         if(len(p_managerID) != 0):
             setProjectManager(_conn, p_projectID, p_managerID)
