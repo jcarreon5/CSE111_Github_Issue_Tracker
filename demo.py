@@ -35,7 +35,7 @@ def createTables(_conn):
     try:
         commands = [
             """CREATE TABLE developers (
-                d_developerID DECIMAL(10, 0) NOT NULL, 
+                d_developerID DECIMAL(10, 0) NOT NULL PRIMARY KEY, 
                 d_username VARCHAR(20) NOT NULL, 
                 d_password VARCHAR(45) NOT NULL, 
                 d_email VARCHAR(45) NOT NULL, 
@@ -46,7 +46,7 @@ def createTables(_conn):
                 pm_projectID DECIMAL(10, 0) NOT NULL
             );""",
             """CREATE TABLE customers (
-                c_customerID DECIMAL(10, 0) NOT NULL, 
+                c_customerID DECIMAL(10, 0) NOT NULL PRIMARY KEY, 
                 c_industryID DECIMAL(3, 0), 
                 c_name VARCHAR(45), 
                 c_phone VARCHAR(45),
@@ -54,7 +54,7 @@ def createTables(_conn):
                 c_createdDate DATETIME NOT NULL
             );""",
             """CREATE TABLE industry (
-                ind_industryID DECIMAL(3, 0) NOT NULL,
+                ind_industryID DECIMAL(3, 0) NOT NULL PRIMARY KEY,
                 ind_industryName VARCHAR(45) NOT NULL
             );""",
             """CREATE TABLE developerprojects (
@@ -66,7 +66,7 @@ def createTables(_conn):
                 cp_projectID DECIMAL(10, 0) NOT NULL
             );""",
             """CREATE TABLE projects (
-                p_projectID DECIMAL(10, 0) NOT NULL, 
+                p_projectID DECIMAL(10, 0) NOT NULL PRIMARY KEY, 
                 p_projectName VARCHAR(20) NOT NULL, 
                 p_desc VARCHAR(512), 
                 p_managerID DECIMAL(10, 0), 
@@ -74,23 +74,23 @@ def createTables(_conn):
                 p_lastUpdate DATETIME NOT NULL
             );""",
             """CREATE TABLE releases(
+                r_releaseID DECIMAL(10, 0) NOT NULL PRIMARY KEY,
                 r_projectID DECIMAL(10, 0) NOT NULL,
-                r_releaseID DECIMAL(10, 0) NOT NULL,
                 r_desc VARCHAR(512)
             );""",
             """CREATE TABLE issues(
+                i_issueID DECIMAL(10, 0) NOT NULL PRIMARY KEY,
                 i_projectID DECIMAL(10, 0) NOT NULL,
-                i_issueID DECIMAL(10, 0) NOT NULL,
                 i_desc VARCHAR(512)
             );""",
             """CREATE TABLE branches(
+                b_branchID DECIMAL(10, 0) NOT NULL PRIMARY KEY,
                 b_issueID DECIMAL(10, 0) NOT NULL,
-                b_branchID DECIMAL(10, 0) NOT NULL,
                 b_desc VARCHAR(512)
             );""",
             """CREATE TABLE mergerequests(
+                mr_mergeID DECIMAL(10, 0) NOT NULL PRIMARY KEY,
                 mr_branchID DECIMAL(10, 0) NOT NULL,
-                mr_mergeID DECIMAL(10, 0) NOT NULL,
                 mr_desc VARCHAR(512)
             );"""
             ]
@@ -282,7 +282,6 @@ def populateTables(_conn):
 
    
 def createProject(_conn, p_projectName, p_desc = "", p_managerID = ""):
-
     #print("Create Project")
     try:
         sql = """
