@@ -609,6 +609,41 @@ def getAllIssuesForProject(_conn, p_projectID):
         _conn.rollback()
         print(e)
 
+def changePassword(_conn, employeeID, NewPassword):
+    try:
+        sql = """ 
+            UPDATE developers
+            SET developers.e_password = ?
+            WHERE developers.e_employeeID = ?;
+            """
+        
+        cur = _conn.cursor()
+        args = [employeeID,NewPassword]
+        
+        cur.execute(sql, args)
+        _conn.commit()
+    
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def changeEmail(_conn, employeeID, newEmail):
+    try:
+        sql = """ 
+            UPDATE developers
+            SET developers.e_email = ?
+            WHERE developers.e_employeeID = ?;
+            """
+        
+        cur = _conn.cursor()
+        args = [employeeID,newEmail]
+        
+        cur.execute(sql, args)
+        _conn.commit()
+    
+    except Error as e:
+        _conn.rollback()
+        print(e)
 
 
 def createBranch(_conn, b_issueID, b_desc = ""):

@@ -80,9 +80,3 @@ CREATE TABLE mergerequests(
     mr_desc VARCHAR(512)
 );
 
-SELECT p_projectID
-                    FROM projects
-                    JOIN issues ON i_projectID = p_projectID
-                    JOIN branches ON b_issueID = i_issueID
-                    JOIN mergerequests ON b_branchID = mr_branchID
-                    WHERE mr_mergeID = 2;
