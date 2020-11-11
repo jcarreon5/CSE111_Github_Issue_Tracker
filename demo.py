@@ -918,6 +918,109 @@ def getEmployeeID(_conn, e_username):
 
 
 
+def getCustomerID(_conn, c_name):
+    try:
+        sql = """
+                    SELECT c_customerID
+                    FROM customers
+                    WHERE c_name LIKE ?;
+            """
+        args = [c_name]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        rows = cur.fetchall()
+        if(rows[0] == (None,)):
+            return -1
+        else: 
+            row = rows[0]
+        return row[0]
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setCustomerIndustry(_conn, c_customerID, c_industry):
+    try:
+        sql = """
+            UPDATE customers
+            SET c_industry = ?
+            WHERE c_customerID = ?;
+        """
+        args = [c_industry, c_customerID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromMR(_conn, c_customerID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set merge request: " + str(c_customerID) + "'s description to: " + c_industry)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setCustomerCustomerName(_conn, c_customerID, c_name):
+    try:
+        sql = """
+            UPDATE customers
+            SET c_name = ?
+            WHERE c_customerID = ?;
+        """
+        args = [c_name, c_customerID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromMR(_conn, c_customerID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set merge request: " + str(c_customerID) + "'s description to: " + c_name)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setPhone(_conn, c_customerID, c_phone):
+    try:
+        sql = """
+            UPDATE customers
+            SET c_phone = ?
+            WHERE c_customerID = ?;
+        """
+        args = [c_phone, c_customerID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromMR(_conn, c_customerID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set merge request: " + str(c_customerID) + "'s description to: " + c_phone)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+def setCustomerAddress(_conn, c_customerID, c_address):
+    try:
+        sql = """
+            UPDATE customers
+            SET c_address = ?
+            WHERE c_customerID = ?;
+        """
+        args = [c_address, c_customerID]
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        
+        p_ID = getProjectIDFromMR(_conn, c_customerID)
+        if(p_ID != -1):
+            updateProject(_conn, p_ID)
+        print("set merge request: " + str(c_customerID) + "'s description to: " + c_address)
+    except Error as e:
+        _conn.rollback()
+        print(e)
+
+
+
 def main():
     database = r"data/tpch.sqlite"
 
