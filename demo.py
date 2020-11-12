@@ -448,31 +448,26 @@ def createRelease(_conn, r_projectID, r_desc = ""):
     #print("Create Realese")
     try:
         sql = """
-                SELECT MAX(r_releaseID)
-                FROM releases;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        _conn.commit()
-        
-
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        r_releaseID = row[0]
-
-        r_releaseID= str(int(r_releaseID) + 1)
-
-        sql = """
-                INSERT INTO releases(r_projectID, r_releaseID, r_desc)
-                VALUES(?, ?, ?)
+                INSERT INTO releases(r_projectID, r_desc)
+                VALUES(?, ?)
         """
-        args = [r_projectID, r_releaseID, r_desc]
+
+        args = [r_projectID, r_desc]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
+
+        sql = """
+                SELECT r_releaseID
+                FROM releases
+                WHERE r_projectID = ?
+                AND r_desc = ?;
+                """
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        r_releaseID = cur.fetchall()
+
         print("created release: " + str(r_releaseID))
     except Error as e:
         _conn.rollback()
@@ -485,31 +480,26 @@ def createIssue(_conn, i_projectID, i_desc = ""):
     #print("Create Issue")
     try:
         sql = """
-                SELECT MAX(i_issueID)
-                FROM issues;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        _conn.commit()
-        
-
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        i_issueID = row[0]
-
-        i_issueID = str(int(i_issueID) + 1)
-
-        sql = """
-                INSERT INTO issues(i_projectID, i_issueID, i_desc)
-                VALUES(?, ?, ?)
+                INSERT INTO issues(i_projectID, i_desc)
+                VALUES(?, ?)
         """
-        args = [i_projectID, i_issueID, i_desc]
+
+        args = [i_projectID, i_desc]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
+
+        sql  = """
+                SELECT i_issueID
+                FROM issues
+                WHERE i_projectID = ?
+                AND i_desc = ?;
+                """
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        i_issueID = cur.fetchall()
+
         print("created issue: " + str(i_issueID) + " for project: " + str(i_projectID))
     except Error as e:
         _conn.rollback()
@@ -612,31 +602,25 @@ def createBranch(_conn, b_issueID, b_desc = ""):
     #print("Create Branch")
     try:
         sql = """
-                SELECT MAX(b_branchID)
-                FROM branches;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        _conn.commit()
-        
-
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        b_branchID = row[0]
-
-        b_branchID = str(int(b_branchID) + 1)
-
-        sql = """
-                INSERT INTO branches(b_issueID, b_branchID, b_desc)
-                VALUES(?, ?, ?)
+                INSERT INTO branches(b_issueID, b_desc)
+                VALUES(?, ?)
         """
-        args = [b_issueID, b_branchID, b_desc]
+        args = [b_issueID, b_desc]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
+
+        sql  = """
+                SELECT b_branchID
+                FROM branches
+                WHERE b_issueID = ?
+                AND b_desc = ?;
+                """
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        b_branchID = cur.fetchall()
+
         print("created branch: " + str(b_branchID) + " for issue: " + str(b_issueID))
     except Error as e:
         _conn.rollback()
@@ -646,7 +630,7 @@ def setBranchDescription(_conn, b_branchID, b_desc):
     #print("Setting issue description")
     try:
         sql = """
-            UPDATE branch
+            UPDATE branches
             SET b_desc = ?
             WHERE b_branchID = ?;
         """
@@ -741,31 +725,26 @@ def createMergeRequest(_conn, mr_branchID, mr_desc = ""):
     #print("Create Merge Request")
     try:
         sql = """
-                SELECT MAX(mr_mergeID)
-                FROM mergerequests;
-            """
-        cur = _conn.cursor()
-        cur.execute(sql)
-        _conn.commit()
-        
-
-        rows = cur.fetchall()
-        if(rows[0] == (None,)):
-            row = [0]
-        else: 
-            row = rows[0]
-        mr_mergeID = row[0]
-
-        mr_mergeID = str(int(mr_mergeID) + 1)
-
-        sql = """
-                INSERT INTO mergerequests(mr_branchID, mr_mergeID, mr_desc)
-                VALUES(?, ?, ?)
+                INSERT INTO mergerequests(mr_branchID, mr_desc)
+                VALUES(?, ?)
         """
-        args = [mr_branchID, mr_mergeID, mr_desc]
+        args = [mr_branchID, mr_desc]
         cur = _conn.cursor()
         cur.execute(sql, args)
         _conn.commit()
+
+        sql  = """
+                SELECT mr_mergeID
+                FROM mergerequests
+                WHERE mr_issueID = ?
+                AND mr_desc = ?;
+                """
+        cur = _conn.cursor()
+        cur.execute(sql, args)
+        _conn.commit()
+        mr_mergeID = cur.fetchall()
+
+
         print("created merge request: " + str(mr_mergeID) + " for branch: " + str(mr_branchID))
     except Error as e:
         _conn.rollback()
