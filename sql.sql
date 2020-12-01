@@ -44,7 +44,9 @@ CREATE TABLE projects (
 CREATE TABLE customers (
     c_customerID INTEGER PRIMARY KEY, 
     c_industryID DECIMAL(3, 0), 
-    c_name VARCHAR(45), 
+    c_name VARCHAR(45),
+    c_username VARCHAR(45),
+    c_password VARCHAR(45), 
     c_phone VARCHAR(45),
     c_address VARCHAR(45),
     c_createdDate DATETIME NOT NULL,

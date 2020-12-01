@@ -55,7 +55,9 @@ def createTables(_conn):
             """CREATE TABLE customers (
                 c_customerID INTEGER PRIMARY KEY, 
                 c_industryID DECIMAL(3, 0), 
-                c_name VARCHAR(45), 
+                c_name VARCHAR(45),
+                c_username VARCHAR(45),
+                c_password VARCHAR(45),
                 c_phone VARCHAR(45),
                 c_address VARCHAR(45),
                 c_createdDate DATETIME NOT NULL,
@@ -174,12 +176,12 @@ def populateTables(_conn):
             customerprojects.append([i,i])
 
         #customers
-        # c_customerID , c_industryID , c_name , c_phone , c_address, c_createdDate
-        customers.append([0,0, 'BOB', '619-584-0293','fghjk Street', '2020-04-15 03:55:18' ])
-        customers.append([1,1, 'kiwi', '345-524-4593','qwer Street', '2020-05-15 03:55:18' ])
-        customers.append([2,2, 'MY', '159-214-1433','ashjg Street', '2020-06-15 03:55:18' ])
-        customers.append([3,3, 'LOL', '363-214-7532','lpokj Street', '2020-07-15 03:55:18' ])
-        customers.append([4,4, 'John', '098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
+        # c_customerID , c_industryID , c_name , c_username, c_password, c_phone , c_address, c_createdDate
+        customers.append([0,0, 'BOB','BOB12234','password1234567', '619-584-0293','fghjk Street', '2020-04-15 03:55:18' ])
+        customers.append([1,1, 'kiwi','kiwi17652','sdghTRDFhTdgI789', '345-524-4593','qwer Street', '2020-05-15 03:55:18' ])
+        customers.append([2,2, 'MY','MY964678','THJFS9876gjd','159-214-1433','ashjg Street', '2020-06-15 03:55:18' ])
+        customers.append([3,3, 'LOL','LOL12533','ouThsusft298','363-214-7532','lpokj Street', '2020-07-15 03:55:18' ])
+        customers.append([4,4, 'John','JohnWick', 'Terminator9876','098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
 
         #developerprojects
         #dp_developerID , dp_projectID
@@ -256,7 +258,7 @@ def populateTables(_conn):
             _conn.execute(sql, l)
             _conn.commit()
 
-        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?, ?)"
+        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
         for l in customers:
             _conn.execute(sql, l)
             _conn.commit()
