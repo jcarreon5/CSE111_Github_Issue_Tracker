@@ -1062,15 +1062,17 @@ def databaseSetup():
  
     # create a database connection
     conn = openConnection(database)
-    with conn:
-        
-        # SQL Connections
-        dropTables(conn)
-        print()
-        createTables(conn)
-        print()
-        populateTables(conn)
-        print()
+
+    # SQL Connections
+    dropTables(conn)
+    print()
+    createTables(conn)
+    print()
+    populateTables(conn)
+    print()
+
+def loginDatabase(username, password):
+    pass
 
 def main():
     database = r"data/tpch.sqlite"
