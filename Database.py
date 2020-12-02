@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
-
+global_conn = None
 def openConnection(_dbFile):
 
     #print("Open database: ", _dbFile)
@@ -1062,7 +1062,7 @@ def databaseSetup():
  
     # create a database connection
     conn = openConnection(database)
-
+    global_conn = conn
     # SQL Connections
     dropTables(conn)
     print()
@@ -1071,8 +1071,55 @@ def databaseSetup():
     populateTables(conn)
     print()
 
-def loginDatabase(username, password):
-    pass
+#return the iD
+#type is as cutumer or developers
+# the fuction will call the sql 
+# check the type if the username and password is valid
+
+def loginDatabase(username, password, table):
+    try:
+        if(table == 'custumer'):
+            ID = None
+            sql = """
+                    SELECT c_customerID 
+                        FROM customers
+                        WHERE c_username = ?
+                        AND c_password = ?;
+                """
+            args = [ID]
+            cur = global_conn.cursor()
+            custumerID = cur.execute(sql, args)
+            global_conn.commit()
+            
+            if (custumerID != None):
+                return custumerID
+            else:
+                return None
+
+        elif(table == 'developer'):
+            ID = None
+            sql2 = """
+                    SELECT d_developerID 
+                        FROM developers
+                        WHERE d_username = ?
+                        AND d_password = ?;
+                """
+            args2 = [ID]
+            cur = global_conn.cursor()
+            developerID = cur.execute(sql2, args2)
+            global_conn.commit()
+
+            if (developerID != None):
+                return developerID
+            else:
+                return None
+
+        else:
+            return None
+    
+    except Error as e:
+        global_conn.rollback()
+        print(e)
 
 def main():
     database = r"data/tpch.sqlite"
