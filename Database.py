@@ -477,7 +477,8 @@ def getProjectID(_conn, p_projectName):
         _conn.rollback()
         print(e)
 
-
+def getProjectInfo(_conn ):
+    pass
 
 def createRelease(_conn, r_projectID, r_desc = ""):
 
@@ -1071,11 +1072,6 @@ def databaseSetup():
     populateTables(conn)
     print()
 
-#return the iD
-#type is as cutumer or developers
-# the fuction will call the sql 
-# check the type if the username and password is valid
-
 def loginDatabase(username, password, table):
     try:
         if(table == 'custumer'):
@@ -1120,6 +1116,9 @@ def loginDatabase(username, password, table):
     except Error as e:
         global_conn.rollback()
         print(e)
+
+def getProjectInfoByID(ID, table):
+    pass
 
 def main():
     database = r"data/tpch.sqlite"
