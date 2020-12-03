@@ -1063,6 +1063,7 @@ def databaseSetup():
  
     # create a database connection
     conn = openConnection(database)
+    global global_conn
     global_conn = conn
     # SQL Connections
     dropTables(conn)
@@ -1075,14 +1076,14 @@ def databaseSetup():
 def loginDatabase(username, password, table):
     try:
         if(table == 'custumer'):
-            ID = None
+
             sql = """
                     SELECT c_customerID 
                         FROM customers
                         WHERE c_username = ?
                         AND c_password = ?;
                 """
-            args = [ID]
+            args = [username,password]
             cur = global_conn.cursor()
             custumerID = cur.execute(sql, args)
             global_conn.commit()
@@ -1093,14 +1094,13 @@ def loginDatabase(username, password, table):
                 return None
 
         elif(table == 'developer'):
-            ID = None
             sql2 = """
                     SELECT d_developerID 
                         FROM developers
                         WHERE d_username = ?
                         AND d_password = ?;
                 """
-            args2 = [ID]
+            args2 = [username,password]
             cur = global_conn.cursor()
             developerID = cur.execute(sql2, args2)
             global_conn.commit()
@@ -1117,8 +1117,70 @@ def loginDatabase(username, password, table):
         global_conn.rollback()
         print(e)
 
+# make an sql query using the table
+# check to see what table it is
+#get all the projects IDS
+# get all the project info.
+#going to find all projects that involded that ID
+# retunr as a double list 
 def getProjectInfoByID(ID, table):
-    pass
+    try:
+        if(table == 'custumer'):
+            
+            sql = """
+                    SELECT cp_projectID
+                        FROM custumerprojects
+                        WHERE cp_customerID = ?
+                """
+            args = [ID]
+            cur = global_conn.cursor()
+            cp_projectID = cur.execute(sql, args).fetchall()
+            global_conn.commit()
+
+            sql12 = """
+                    SELECT *
+                        FROM projects
+                        WHERE p_projectsID = ?
+                """
+            output = []
+            for i in cp_projectID:
+                cur = global_conn.cursor()
+                project_info = cur.execute(sql12, i).fetchall()
+                output.append(project_info)
+            
+            return output
+
+        elif(table == 'developer'):
+            
+            sql2 = """
+                    SELECT dp_projectID
+                        FROM developerprojects
+                        WHERE dp_developerID = ?
+                """
+            args2 = [ID]
+            cur = global_conn.cursor()
+            dp_projectID = cur.execute(sql2, args2).fetchall()
+            global_conn.commit()
+
+            sql22 = """
+                    SELECT *
+                        FROM projects
+                        WHERE p_projectsID = ?
+                """
+            output = []
+            for i in dp_projectID:
+                cur = global_conn.cursor()
+                project_info = cur.execute(sql22, i).fetchall()
+                output.append(project_info)
+            
+            return output
+            
+        else:
+            return None
+    
+    except Error as e:
+        global_conn.rollback()
+        print(e)
 
 def main():
     database = r"data/tpch.sqlite"
