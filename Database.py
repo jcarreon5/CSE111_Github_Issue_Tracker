@@ -1075,7 +1075,7 @@ def databaseSetup():
 
 def loginDatabase(username, password, table):
     try:
-        if(table == 'custumer'):
+        if(table == 'Customer'):
 
             sql = """
                     SELECT c_customerID 
@@ -1093,7 +1093,7 @@ def loginDatabase(username, password, table):
             else:
                 return None
 
-        elif(table == 'developer'):
+        elif(table == 'Developer'):
             sql2 = """
                     SELECT d_developerID 
                         FROM developers
@@ -1106,7 +1106,7 @@ def loginDatabase(username, password, table):
             global_conn.commit()
 
             if (developerID != None):
-                return developerID
+                return developerID.fetchall()[0][0]
             else:
                 return None
 
@@ -1125,7 +1125,7 @@ def loginDatabase(username, password, table):
 # retunr as a double list 
 def getProjectInfoByID(ID, table):
     try:
-        if(table == 'custumer'):
+        if(table == 'Customer'):
             
             sql = """
                     SELECT cp_projectID
@@ -1150,7 +1150,7 @@ def getProjectInfoByID(ID, table):
             
             return output
 
-        elif(table == 'developer'):
+        elif(table == 'Developer'):
             
             sql2 = """
                     SELECT dp_projectID
@@ -1165,12 +1165,12 @@ def getProjectInfoByID(ID, table):
             sql22 = """
                     SELECT *
                         FROM projects
-                        WHERE p_projectsID = ?
+                        WHERE p_projectID = ?
                 """
             output = []
             for i in dp_projectID:
                 cur = global_conn.cursor()
-                project_info = cur.execute(sql22, i).fetchall()
+                project_info = cur.execute(sql22, i).fetchall()[0]
                 output.append(project_info)
             
             return output
