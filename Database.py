@@ -167,118 +167,140 @@ def populateTables(_conn):
 
         #branches
         # b_issueID, b_branchID ,  b_desc
-        for i in range(0,5):
-            branches.append([i,i,'kgkhgkhg'])
+        for i in range(1,6):
+            branches.append([i, 'branch' + str(i)])
+        for i in range(1,6):
+            branches.append([i, 'branch' + str(i)])
 
         #customerprojects
         # cp_customerID , cp_projectID
-        for i in range(0,5):
+        for i in range(1,6):
             customerprojects.append([i,i])
+            customerprojects.append([6,i])
 
         #customers
         # c_customerID , c_industryID , c_name , c_username, c_password, c_phone , c_address, c_createdDate
-        customers.append([0,0, 'BOB','BOB12234','password1234567', '619-584-0293','fghjk Street', '2020-04-15 03:55:18' ])
-        customers.append([1,1, 'kiwi','kiwi17652','sdghTRDFhTdgI789', '345-524-4593','qwer Street', '2020-05-15 03:55:18' ])
-        customers.append([2,2, 'MY','MY964678','THJFS9876gjd','159-214-1433','ashjg Street', '2020-06-15 03:55:18' ])
-        customers.append([3,3, 'LOL','LOL12533','ouThsusft298','363-214-7532','lpokj Street', '2020-07-15 03:55:18' ])
-        customers.append([4,4, 'John','JohnWick', 'Terminator9876','098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
+        customers.append([1, 'BOB','BOB12234','password1234567', '619-584-0293','fghjk Street', '2020-04-15 03:55:18' ])
+        customers.append([2, 'kiwi','kiwi17652','sdghTRDFhTdgI789', '345-524-4593','qwer Street', '2020-05-15 03:55:18' ])
+        customers.append([3, 'MY','MY964678','THJFS9876gjd','159-214-1433','ashjg Street', '2020-06-15 03:55:18' ])
+        customers.append([4, 'LOL','LOL12533','ouThsusft298','363-214-7532','lpokj Street', '2020-07-15 03:55:18' ])
+        customers.append([5, 'John','JohnWick', 'Terminator9876','098-234-7993','ikmn Street' , '2020-10-15 03:55:18'])
+        customers.append([1, 'admin','admin','password', '101-010-1010','admin street', '1000-10-10 10:10:10'])
 
         #developerprojects
         #dp_developerID , dp_projectID
-        for i in range(0,5):
+        for i in range(1,6):
             developerprojects.append([i,i])
+            developerprojects.append([11,i])
+        
         
         #developers
         #d_developerID , d_username , d_password , d_email , d_createdDate
-        developers.append([0,'Timmy', 'AASDFGH', 'sdfghj@gmail.com', '2020-01-11 03:55:18' ])
-        developers.append([1,'Jimmy', 'mjhredc', 'sawerty@gmail.com', '2020-02-11 03:55:18' ])
-        developers.append([2,'Kimmy', 'asdfgcxa', 'plmnbv@gmail.com', '2020-03-11 03:55:18' ])
-        developers.append([3,'Paul', 'poiuytrsd', 'rtyuij@gmail.com', '2020-04-11 03:55:18' ])
-        developers.append([4,'Ronny', 'oiuytrsdfg', 'mjytrsx@gmail.com', '2020-05-11 03:55:18' ])
+        developers.append(['Timmy', 'AASDFGH', 'sdfghj@gmail.com', '2020-01-11 03:55:18' ])
+        developers.append(['Jimmy', 'mjhredc', 'sawerty@gmail.com', '2020-02-11 03:55:18' ])
+        developers.append(['Kimmy', 'asdfgcxa', 'plmnbv@gmail.com', '2020-03-11 03:55:18' ])
+        developers.append(['Paul', 'poiuytrsd', 'rtyuij@gmail.com', '2020-04-11 03:55:18' ])
+        developers.append(['Ronny', 'oiuytrsdfg', 'mjytrsx@gmail.com', '2020-05-11 03:55:18' ])
+        developers.append(['Timmy', 'AASDFGH', 'sdfghj@gmail.com', '2020-01-11 03:55:18' ])
+        developers.append(['Jimmy', 'mjhredc', 'sawerty@gmail.com', '2020-02-11 03:55:18' ])
+        developers.append(['Kimmy', 'asdfgcxa', 'plmnbv@gmail.com', '2020-03-11 03:55:18' ])
+        developers.append(['Paul', 'poiuytrsd', 'rtyuij@gmail.com', '2020-04-11 03:55:18' ])
+        developers.append(['Ronny', 'oiuytrsdfg', 'mjytrsx@gmail.com', '2020-05-11 03:55:18' ])
+        developers.append(['admin', 'password', 'admin@app.com', '1000-10-10 10:10:10'])
 
         #industry
         #ind_industryID , ind_industryName
-        industry.append([0,'Food'])
-        industry.append([1,'tech'])
-        industry.append([2,'water'])
-        industry.append([3,'alc'])
-        industry.append([4,'toys'])
+        industry.append(['Food'])
+        industry.append(['tech'])
+        industry.append(['water'])
+        industry.append(['alc'])
+        industry.append(['toys'])
 
         #issues
         #i_projectID , i_issueID , i_desc
-        issues.append([0, 0, 'asdfghjk'])
-        issues.append([1, 1, 'loiuytf'])
-        issues.append([2, 2, 'vfghjres'])
-        issues.append([3, 3, 'avcxswer'])
-        issues.append([4, 4, 'poiuytrd'])
+        issues.append([1, 'asdfghjk'])
+        issues.append([2, 'loiuytf'])
+        issues.append([3, 'vfghjres'])
+        issues.append([4, 'avcxswer'])
+        issues.append([5, 'poiuytrd'])
+        issues.append([1, 'asdfghjk'])
+        issues.append([2, 'loiuytf'])
+        issues.append([3, 'vfghjres'])
+        issues.append([3, 'avcxswer'])
+        issues.append([3, 'poiuytrd'])
 
 
         #mergerequests
         #mr_branchID , mr_mergeID , mr_desc
-        mergerequests.append([0,0,'oiuytrdsd'])
-        mergerequests.append([1,1,'plkjytrd'])
-        mergerequests.append([2,2,'wertyuhfd tresdfg'])
-        mergerequests.append([3,3,'poiuytdf ewasdv'])
-        mergerequests.append([4,4,'vcxsweftresad'])
+        mergerequests.append([1,'oiuytrdsd'])
+        mergerequests.append([2,'plkjytrd'])
+        mergerequests.append([3,'wertyuhfd tresdfg'])
+        mergerequests.append([4,'poiuytdf ewasdv'])
+        mergerequests.append([5,'vcxsweftresad'])
+        mergerequests.append([6,'oiuytrdsd'])
+        mergerequests.append([7,'plkjytrd'])
+        mergerequests.append([8,'wertyuhfd tresdfg'])
+        mergerequests.append([9,'poiuytdf ewasdv'])
+        mergerequests.append([9,'vcxsweftresad'])
 
         #projectmanagers
         #pm_developerID , pm_projectID
-        projectmanagers.append([0,0])
         projectmanagers.append([1,1])
         projectmanagers.append([2,2])
         projectmanagers.append([3,3])
         projectmanagers.append([4,4])
+        projectmanagers.append([5,5])
 
         #projects
         #p_projectID , p_projectName , p_desc , p_managerID , p_createdDate , p_lastUpdate 
 
-        projects.append([0,'a', 'sdfghj', '2020-02-01 03:55:18', '2020-02-01 03:55:18'])
-        projects.append([1,'b', 'ljhgfdxdfv', '2020-02-02 03:55:18', '2020-02-02 03:55:18'])
-        projects.append([2,'c', 'wertyhgfc', '2020-02-03 03:55:18', '2020-02-03 03:55:18'])
-        projects.append([3,'d', 'lkjhgfd', '2020-02-04 03:55:18', '2020-02-04 03:55:18'])
-        projects.append([4,'e', 'ougfd', '2020-02-05 03:55:18', '2020-02-05 03:55:18'])
+        projects.append(['a', 'sdfghj', '2020-02-01 03:55:18', '2020-02-01 03:55:18'])
+        projects.append(['b', 'ljhgfdxdfv', '2020-02-02 03:55:18', '2020-02-02 03:55:18'])
+        projects.append(['c', 'wertyhgfc', '2020-02-03 03:55:18', '2020-02-03 03:55:18'])
+        projects.append(['d', 'lkjhgfd', '2020-02-04 03:55:18', '2020-02-04 03:55:18'])
+        projects.append(['e', 'ougfd', '2020-02-05 03:55:18', '2020-02-05 03:55:18'])
 
         #releases
         #r_projectID , r_releaseID , r_descS
-        releases.append([0,0,'sdfghjkiuyt'])
-        releases.append([1,1,'asdfghjkedc'])
-        releases.append([2,2,'smjuytdsxc'])
-        releases.append([3,3,'cvbnmiuysd'])
-        releases.append([4,4,'fghjkltgvedc'])
+        releases.append([1,'sdfghjkiuyt'])
+        releases.append([2,'asdfghjkedc'])
+        releases.append([3,'smjuytdsxc'])
+        releases.append([4,'cvbnmiuysd'])
+        releases.append([5,'fghjkltgvedc'])
 
 
-        sql = "INSERT INTO projects VALUES(?, ?, ?, ?, ?)"
+        sql = "INSERT INTO projects(p_projectName, p_desc, p_createdDate, p_lastUpdate) VALUES(?, ?, ?, ?)"
         for i, l in enumerate(projects):
             _conn.execute(sql, l)
             _conn.commit()
             setProjectManager(_conn, l[0], i)
             
-        sql = "INSERT INTO industry VALUES(?, ?)"
+        sql = "INSERT INTO industry(ind_industryName) VALUES(?)"
         for l in industry:
             _conn.execute(sql, l)
             _conn.commit()
 
-        sql = "INSERT INTO customers VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+        sql = "INSERT INTO customers(c_industryID, c_name, c_username, c_password, c_phone, c_address, c_createdDate) VALUES(?, ?, ?, ?, ?, ?, ?)"
         for l in customers:
             _conn.execute(sql, l)
             _conn.commit()
             
-        sql = "INSERT INTO developers VALUES(?, ?, ?, ?, ?)"
+        sql = "INSERT INTO developers(d_username, d_password, d_email, d_createdDate) VALUES(?, ?, ?, ?)"
         for l in developers:
             _conn.execute(sql, l)
             _conn.commit()
 
-        sql = "INSERT INTO issues VALUES(?, ?, ?)"
+        sql = "INSERT INTO issues(i_projectID, i_desc) VALUES(?, ?)"
         for l in issues:
             _conn.execute(sql, l)
             _conn.commit()
 
-        sql = "INSERT INTO branches VALUES(?, ?, ?)"
+        sql = "INSERT INTO branches(b_issueID, b_desc) VALUES(?, ?)"
         for l in branches:
             _conn.execute(sql, l)
             _conn.commit()
             
-        sql = "INSERT INTO mergerequests VALUES(?, ?, ?)"
+        sql = "INSERT INTO mergerequests(mr_branchID, mr_desc) VALUES(?, ?)"
         for l in mergerequests:
             _conn.execute(sql, l)
             _conn.commit()
@@ -302,7 +324,7 @@ def populateTables(_conn):
             _conn.execute(sql, l)
             _conn.commit()
 
-        sql = "INSERT INTO releases VALUES(?, ?, ?)"
+        sql = "INSERT INTO releases(r_projectID, r_desc) VALUES(?, ?)"
         for l in releases:
             _conn.execute(sql, l)
             _conn.commit()
@@ -1243,13 +1265,13 @@ def main():
         createBranch(conn, 5)
         print()
         
-        createMergeRequest(conn, 6)
+        createMergeRequest(conn, 3)
         print()
         
-        createMergeRequest(conn, 6)
+        createMergeRequest(conn, 3)
         print()
         
-        createMergeRequest(conn, 6)
+        createMergeRequest(conn, 3)
         print()
         
         mergeIssue(conn, 6)

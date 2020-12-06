@@ -31,8 +31,7 @@ def startUI():
     
     tk.Label(loginWindow, text = "Enter password:").pack()
     
-    passwordEntry = tk.Entry(loginWindow, textvariable = password)
-    passwordEntry.pack()
+    tk.Entry(loginWindow, textvariable = password)
     
     tk.Button(loginWindow, text = "Log-in", width = 10, height = 1, command = lambda: logIn(username, password, table)).pack()
     
@@ -57,7 +56,7 @@ def callProjectsWindow(projects):
     projectDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
     scrollbar.config(command = projectDisplay.yview)
     
-    tk.Button(projectsWindow, text = "Open Project", width = 10, height = 1, command = lambda: callShowProjectData(projects, projIDs[projectDisplay.curselection()[0]])).pack()
+    tk.Button(projectsWindow, text = "Open Project", width = 10, height = 1, command = lambda: callShowProjectData(projects, projIDs[projectDisplay.curselection()[0]] - 1)).pack()
 
     projectsWindow.tkraise()
 
@@ -76,6 +75,7 @@ def logIn(username, password, table):
         
     
 def callShowProjectData(projects, ID = 0):
+    print(ID)
     for w in windows:
         w.pack_forget()
     projectInfoWindow.pack()
@@ -105,7 +105,6 @@ def callShowProjectData(projects, ID = 0):
         issueDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
         scrollbar.config(command = issueDisplay.yview)
     
-        #tk.Button(projectsWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowProjectData(projects, issueIDs[issueDisplay.curselection()[0]])).pack()
 
     else:
         e = tk.Label(errorPopup, text = "Invalid login/password combination!")
@@ -128,7 +127,7 @@ def callShowProjectData(projects, ID = 0):
 def main():
     #startUI()
     databaseSetup()
-    callProjectsWindow(getProjectInfoByID(0, "Developer"))
+    callProjectsWindow(getProjectInfoByID(11, "Developer"))
     root.mainloop()
     print("==========")
     
