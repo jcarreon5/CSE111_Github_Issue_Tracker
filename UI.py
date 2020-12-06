@@ -74,29 +74,27 @@ def logIn(username, password, table):
         errorPopup.tkraise(loginWindow)
         
     
-def callShowProjectData(projects, ID = 0):
-    print(ID)
+def callShowProjectData(projects, ID = 1):
     for w in windows:
         w.pack_forget()
     projectInfoWindow.pack()
     
-    #tk.Button(projectsWindow, text = "Open Project", width = 10, height = 1, command = lambda: callProjectsWindow(projects)).pack()
     
     tk.Label(text = "Project name: ").pack()
     tk.Label(text = projects[ID][1]).pack()
     tk.Label(text = "Project description: ").pack()
     tk.Label(text = projects[ID][2]).pack()
-    tk.Label(tect = "Issues:").pack()
+    tk.Label(text = "Issues:").pack()
     
     
     
-    issues = getAllIssuesForProject(ID)
+    issues = getAllIssuesForProject(projects[ID][0])
     issueIDs = []
     if(issues):
-        scrollbar = tk.Scrollbar(projectsWindow)
+        scrollbar = tk.Scrollbar(projectInfoWindow)
         scrollbar.pack(side = tk.RIGHT, fill = tk.Y)
         
-        issueDisplay = tk.Listbox(projectsWindow, yscrollcommand = scrollbar.set)
+        issueDisplay = tk.Listbox(projectInfoWindow, yscrollcommand = scrollbar.set)
         for i in issues:
             t = getIssueDetails(i)
             issueDisplay.insert(tk.END, t[2])
@@ -114,8 +112,9 @@ def callShowProjectData(projects, ID = 0):
         errorPopup.tkraise(loginWindow)
         return
     
+    tk.Button(projectInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowProjectData(projects, issueIDs[issueDisplay.curselection()[0]] - 1)).pack()
 
-    projectsWindow.tkraise()
+    projectInfoWindow.tkraise()
 
     tk.Label(text = "Project created date: ").pack()
     tk.Label(text = projects[ID][3]).pack()

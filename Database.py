@@ -641,8 +641,10 @@ def getProjectIDFromIssue(_conn, i_issueID):
         _conn.rollback()
         print(e)
 
-def getAllIssuesForProject(_conn, p_projectID):
+def getAllIssuesForProject(p_projectID, _conn = global_conn):
     try:
+        if(not _conn):
+            _conn = global_conn
         sql = """
                 SELECT i_issueID
                 FROM issues
@@ -668,11 +670,17 @@ def getIssueDetails(id):
                 FROM issues
                 WHERE i_issueID = ?;
         """
+        try:
+            if(len(id) > 0):
+                id = id[0]
+        except Error as e:
+            pass
         cur = global_conn.cursor()
         cur.execute(sql, [id])
         global_conn.commit()
         
         rows = cur.fetchall()
+        print(rows)
         return rows[0]
         
         
