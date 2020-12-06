@@ -80,16 +80,49 @@ def callShowProjectData(projects, ID = 0):
         w.pack_forget()
     projectInfoWindow.pack()
     
-    tk.Button(projectsWindow, text = "Open Project", width = 10, height = 1, command = lambda: callProjectsWindow(projects)).pack()
+    #tk.Button(projectsWindow, text = "Open Project", width = 10, height = 1, command = lambda: callProjectsWindow(projects)).pack()
     
     tk.Label(text = "Project name: ").pack()
     tk.Label(text = projects[ID][1]).pack()
     tk.Label(text = "Project description: ").pack()
     tk.Label(text = projects[ID][2]).pack()
+    tk.Label(tect = "Issues:").pack()
+    
+    
+    
+    issues = getAllIssuesForProject(ID)
+    issueIDs = []
+    if(issues):
+        scrollbar = tk.Scrollbar(projectsWindow)
+        scrollbar.pack(side = tk.RIGHT, fill = tk.Y)
+        
+        issueDisplay = tk.Listbox(projectsWindow, yscrollcommand = scrollbar.set)
+        for i in issues:
+            t = getIssueDetails(i)
+            issueDisplay.insert(tk.END, t[2])
+            issueIDs.append(t[0])
+            
+        issueDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
+        scrollbar.config(command = issueDisplay.yview)
+    
+        #tk.Button(projectsWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowProjectData(projects, issueIDs[issueDisplay.curselection()[0]])).pack()
+
+    else:
+        e = tk.Label(errorPopup, text = "Invalid login/password combination!")
+        e.pack()
+        root.after(1000, tk.Label.pack_forget, e)
+        root.after(1000, tk.Label.pack_forget, errorPopup)
+        errorPopup.tkraise(loginWindow)
+        return
+    
+
+    projectsWindow.tkraise()
+
     tk.Label(text = "Project created date: ").pack()
     tk.Label(text = projects[ID][3]).pack()
     tk.Label(text = "Project last update: ").pack()
     tk.Label(text = projects[ID][4]).pack()
+
 
 
 def main():

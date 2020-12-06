@@ -477,9 +477,6 @@ def getProjectID(_conn, p_projectName):
         _conn.rollback()
         print(e)
 
-def getProjectInfo(_conn ):
-    pass
-
 def createRelease(_conn, r_projectID, r_desc = ""):
 
     #print("Create Realese")
@@ -642,7 +639,24 @@ def getAllIssuesForProject(_conn, p_projectID):
         _conn.rollback()
         print(e)
 
-
+def getIssueDetails(id):
+    try:
+        sql = """
+                SELECT *
+                FROM issues
+                WHERE i_issueID = ?;
+        """
+        cur = global_conn.cursor()
+        cur.execute(sql, [id])
+        global_conn.commit()
+        
+        rows = cur.fetchall()
+        return rows[0]
+        
+        
+    except Error as e:
+        global_conn.rollback()
+        print(e)
 
 def createBranch(_conn, b_issueID, b_desc = ""):
 
