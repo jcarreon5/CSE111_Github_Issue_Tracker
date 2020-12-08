@@ -90,8 +90,6 @@ def callShowProjectData(projects, ID = 1):
     tk.Label(text = projects[ID][2]).pack()
     tk.Label(text = "Issues:").pack()
     
-    
-    
     issues = getAllIssuesForProject(projects[ID][0])
     issueIDs = []
     if(issues):
@@ -107,7 +105,6 @@ def callShowProjectData(projects, ID = 1):
         issueDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
         scrollbar.config(command = issueDisplay.yview)
     
-
     else:
         e = tk.Label(errorPopup, text = "Invalid login/password combination!")
         e.pack()
@@ -130,11 +127,36 @@ def callShowBranchData(branch, ID = 1):
         w.pack_forget()
     branchInfoWindow.pack()
     
-    
-    tk.Label(text = " Issue ID: ").pack()
-    tk.Label(text = branch[ID][1]).pack()
     tk.Label(text = "Branch Description: ").pack()
     tk.Label(text = branch[ID][2]).pack()
+
+    merges = getAllMergeRequestsFromBranch(branch[ID][0])
+    mergeIDs = []
+    if(merges):
+        scrollbar = tk.Scrollbar(mergeInfoWindow)
+        scrollbar.pack(side = tk.RIGHT, fill = tk.Y)
+        
+        mergeDisplay = tk.Listbox(mergeInfoWindow, yscrollcommand = scrollbar.set)
+        for i in merges:
+            t = getMergeDetails(i)
+            mergeDisplay.insert(tk.END, t[2])
+            mergeIDs.append(t[0])
+            
+        mergeDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
+        scrollbar.config(command = mergeDisplay.yview)
+    
+
+    else:
+        e = tk.Label(errorPopup, text = "Invalid login/password combination!")
+        e.pack()
+        root.after(1000, tk.Label.pack_forget, e)
+        root.after(1000, tk.Label.pack_forget, errorPopup)
+        errorPopup.tkraise(loginWindow)
+        return
+    
+    tk.Button(branchInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowBranchData(branch, mergeIDs[mergeDisplay.curselection()[0]] - 1)).pack()
+
+    branchInfoWindow.tkraise()
 
 
 def callShowIssueData(issues, ID = 1):
@@ -197,6 +219,7 @@ def callShowMergeRequestData(merge, ID = 1):
     
     tk.Label(text = "Merge description: ").pack()
     tk.Label(text = merge[ID][2]).pack()
+    tk.Label(text = "Branches:").pack()
 
     branches = getAllBranchesFromMerge(merge[ID][0])
     branchIDs = []
