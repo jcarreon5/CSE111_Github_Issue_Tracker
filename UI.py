@@ -6,11 +6,12 @@ root = tk.Tk()
 loginWindow = tk.Frame(root)
 projectsWindow = tk.Frame(root)
 projectInfoWindow = tk.Frame(root)
+branchInfoWindow = tk.Frame(root)
 issueInfoWindow = tk.Frame(root)
 releaseInfoWindow = tk.Frame(root)
 mergeInfoWindow = tk.Frame(root)
 errorPopup = tk.Frame(root)
-windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup, issueInfoWindow, releaseInfoWindow,mergeInfoWindow]
+windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup, branchInfoWindow, issueInfoWindow, releaseInfoWindow,mergeInfoWindow]
 
 def startUI():
     loginWindow.pack()
@@ -124,6 +125,18 @@ def callShowProjectData(projects, ID = 1):
     tk.Label(text = "Project last update: ").pack()
     tk.Label(text = projects[ID][4]).pack()
 
+def callShowBranchData(branch, ID = 1):
+    for w in windows:
+        w.pack_forget()
+    branchInfoWindow.pack()
+    
+    
+    tk.Label(text = " Issue ID: ").pack()
+    tk.Label(text = branch[ID][1]).pack()
+    tk.Label(text = "Branch Description: ").pack()
+    tk.Label(text = branch[ID][2]).pack()
+
+
 def callShowIssueData(issues, ID = 1):
     for w in windows:
         w.pack_forget()
@@ -177,7 +190,7 @@ def callShowReleaseData(releases, ID = 1):
     tk.Label(text = releases[ID][2]).pack()
 
 
-def callShowMergeData(merge, ID = 1):
+def callShowMergeRequestData(merge, ID = 1):
     for w in windows:
         w.pack_forget()
     mergeInfoWindow.pack()
