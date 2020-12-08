@@ -959,6 +959,25 @@ def getAllMergeRequestsFromBranch(_conn, b_branchID):
         _conn.rollback()
         print(e)
 
+def getAllBranchesFromMerge(_conn, mr_mergeID):
+    try:
+        sql = """
+                SELECT b_branchID
+                FROM branches
+                JOIN mergerequests ON b_branchID = mr_branchID
+                WHERE mr_mergeID = ?;
+        """
+        cur = _conn.cursor()
+        cur.execute(sql, [mr_mergeID])
+        _conn.commit()
+        
+        rows = cur.fetchall()
+        return rows
+        
+        
+    except Error as e:
+        _conn.rollback()
+        print(e)
 
 
 def getDeveloperID(_conn, d_username):

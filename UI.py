@@ -195,11 +195,37 @@ def callShowMergeRequestData(merge, ID = 1):
         w.pack_forget()
     mergeInfoWindow.pack()
     
-    
-    tk.Label(text = "Branch ID: ").pack()
-    tk.Label(text = merge[ID][1]).pack()
     tk.Label(text = "Merge description: ").pack()
     tk.Label(text = merge[ID][2]).pack()
+
+    branches = getAllBranchesFromMerge(merge[ID][0])
+    branchIDs = []
+    if(branches):
+        scrollbar = tk.Scrollbar(mergeInfoWindow)
+        scrollbar.pack(side = tk.RIGHT, fill = tk.Y)
+        
+        branchDisplay = tk.Listbox(mergeInfoWindow, yscrollcommand = scrollbar.set)
+        for i in branches:
+            t = getBranchesDetails(i)
+            branchDisplay.insert(tk.END, t[2])
+            branchIDs.append(t[0])
+            
+        branchDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
+        scrollbar.config(command = branchDisplay.yview)
+    
+
+    else:
+        e = tk.Label(errorPopup, text = "Invalid login/password combination!")
+        e.pack()
+        root.after(1000, tk.Label.pack_forget, e)
+        root.after(1000, tk.Label.pack_forget, errorPopup)
+        errorPopup.tkraise(loginWindow)
+        return
+    
+    tk.Button(mergeInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowMergeRequestData(merge, branchIDs[branchDisplay.curselection()[0]] - 1)).pack()
+
+    mergeInfoWindow.tkraise()
+
 
 def main():
     #startUI()
