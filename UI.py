@@ -1,13 +1,15 @@
 from os import error
-import tkinter as tk
+import Tkinter as tk
 from Database import *
 
 root = tk.Tk()
 loginWindow = tk.Frame(root)
 projectsWindow = tk.Frame(root)
 projectInfoWindow = tk.Frame(root)
+issueInfoWindow = tk.Frame(root)
+releaseInfoWindow = tk.Frame(root)
 errorPopup = tk.Frame(root)
-windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup]
+windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup, issueInfoWindow, releaseInfoWindow]
 
 def startUI():
     loginWindow.pack()
@@ -121,6 +123,46 @@ def callShowProjectData(projects, ID = 1):
     tk.Label(text = "Project last update: ").pack()
     tk.Label(text = projects[ID][4]).pack()
 
+def callShowIssueData(issues, ID = 1):
+    for w in windows:
+        w.pack_forget()
+    releaseInfoWindow.pack()
+    
+    
+    tk.Label(text = "Project ID: ").pack()
+    tk.Label(text = issues[ID][1]).pack()
+    tk.Label(text = "Issue Description: ").pack()
+    tk.Label(text = issues[ID][2]).pack()
+    tk.Label(text = "Branches:").pack()
+    
+    
+    branches = getAllBranchesFromIssue(issues[ID][0])
+    branchIDs = []
+    if(branches):
+        scrollbar = tk.Scrollbar(issueInfoWindow)
+        scrollbar.pack(side = tk.RIGHT, fill = tk.Y)
+        
+        branchDisplay = tk.Listbox(issueInfoWindow, yscrollcommand = scrollbar.set)
+        for i in branches:
+            t = getBranchesDetails(i)
+            branchDisplay.insert(tk.END, t[2])
+            branchIDs.append(t[0])
+            
+        branchDisplay.pack(side = tk.LEFT, fill = tk.BOTH)
+        scrollbar.config(command = branchDisplay.yview)
+    
+
+    else:
+        e = tk.Label(errorPopup, text = "Invalid login/password combination!")
+        e.pack()
+        root.after(1000, tk.Label.pack_forget, e)
+        root.after(1000, tk.Label.pack_forget, errorPopup)
+        errorPopup.tkraise(loginWindow)
+        return
+    
+    tk.Button(releaseInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowIssueData(issues, branchIDs[branchDisplay.curselection()[0]] - 1)).pack()
+
+    releaseInfoWindow.tkraise()
 
 
 def main():

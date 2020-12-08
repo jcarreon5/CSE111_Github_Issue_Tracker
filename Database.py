@@ -688,6 +688,30 @@ def getIssueDetails(id):
         global_conn.rollback()
         print(e)
 
+def getBranchesDetails(id):
+    try:
+        sql = """
+                SELECT *
+                FROM branches
+                WHERE b_branchID = ?;
+        """
+        try:
+            if(len(id) > 0):
+                id = id[0]
+        except Error as e:
+            pass
+        cur = global_conn.cursor()
+        cur.execute(sql, [id])
+        global_conn.commit()
+        
+        rows = cur.fetchall()
+        print(rows)
+        return rows[0]
+        
+    except Error as e:
+        global_conn.rollback()
+        print(e)
+
 def createBranch(_conn, b_issueID, b_desc = ""):
 
     #print("Create Branch")
