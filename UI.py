@@ -205,7 +205,6 @@ def callShowReleaseData(releases, ID = 1):
         w.pack_forget()
     releaseInfoWindow.pack()
     
-    
     tk.Label(text = "Project ID: ").pack()
     tk.Label(text = releases[ID][1]).pack()
     tk.Label(text = "Release description: ").pack()
