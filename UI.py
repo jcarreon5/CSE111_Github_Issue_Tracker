@@ -8,8 +8,9 @@ projectsWindow = tk.Frame(root)
 projectInfoWindow = tk.Frame(root)
 issueInfoWindow = tk.Frame(root)
 releaseInfoWindow = tk.Frame(root)
+mergeInfoWindow = tk.Frame(root)
 errorPopup = tk.Frame(root)
-windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup, issueInfoWindow, releaseInfoWindow]
+windows = [loginWindow, projectsWindow, projectInfoWindow, errorPopup, issueInfoWindow, releaseInfoWindow,mergeInfoWindow]
 
 def startUI():
     loginWindow.pack()
@@ -160,10 +161,32 @@ def callShowIssueData(issues, ID = 1):
         errorPopup.tkraise(loginWindow)
         return
     
-    tk.Button(releaseInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowIssueData(issues, branchIDs[branchDisplay.curselection()[0]] - 1)).pack()
+    tk.Button(issueInfoWindow, text = "Open Issue", width = 10, height = 1, command = lambda: callShowIssueData(issues, branchIDs[branchDisplay.curselection()[0]] - 1)).pack()
 
-    releaseInfoWindow.tkraise()
+    issueInfoWindow.tkraise()
 
+def callShowReleaseData(releases, ID = 1):
+    for w in windows:
+        w.pack_forget()
+    releaseInfoWindow.pack()
+    
+    
+    tk.Label(text = "Project ID: ").pack()
+    tk.Label(text = releases[ID][1]).pack()
+    tk.Label(text = "Release description: ").pack()
+    tk.Label(text = releases[ID][2]).pack()
+
+
+def callShowMergeData(merge, ID = 1):
+    for w in windows:
+        w.pack_forget()
+    mergeInfoWindow.pack()
+    
+    
+    tk.Label(text = "Branch ID: ").pack()
+    tk.Label(text = merge[ID][1]).pack()
+    tk.Label(text = "Merge description: ").pack()
+    tk.Label(text = merge[ID][2]).pack()
 
 def main():
     #startUI()
